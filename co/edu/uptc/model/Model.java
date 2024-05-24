@@ -8,9 +8,11 @@ public class Model {
     public Model() {
     }
 
-    public Model(String correoElectronico, String contraseña) {
+    public Model(String correoElectronico, String contraseña, String idInterno, String userName) {
         this.correoElectronico = correoElectronico;
         this.contraseña = contraseña;
+        this.idInterno = idInterno;
+        this.userName = userName;
     }
 
     public String getCorreoElectronico() {
@@ -29,11 +31,29 @@ public class Model {
         this.contraseña = contraseña;
     }
 
+    public String getIdInterno() {
+        return idInterno;
+    }
+
+    public void setIdInterno(String idInterno) {
+        this.idInterno = idInterno;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     @Override
     public String toString() {
         return "Model{" +
                 "correoElectronico='" + correoElectronico + '\'' +
                 ", contraseña='" + contraseña + '\'' +
+                ", idInterno='" + idInterno + '\'' +
+                ", userName='" + userName + '\'' +
                 '}';
     }
 }
