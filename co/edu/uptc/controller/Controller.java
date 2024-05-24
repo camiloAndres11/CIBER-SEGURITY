@@ -8,10 +8,12 @@ import java.util.regex.Pattern;
 
 public class Controller {
     private ArrayList<Model> cuentasEstudiantes;
-    public Controller(){
-        cuentasEstudiantes=new ArrayList<>();
+
+    public Controller() {
+        cuentasEstudiantes = new ArrayList<>();
 
     }
+
     public boolean verificarContraseña(String contraseña) {
         // Longitud mínima de 8 caracteres
         if (contraseña.length() < 8) {
@@ -35,7 +37,7 @@ public class Controller {
             return false;
         }
 
-        // Al menos 5 números
+        // Al menos 2 números
         int countNumbers = 0;
         for (char c : contraseña.toCharArray()) {
             if (Character.isDigit(c)) {
@@ -59,15 +61,14 @@ public class Controller {
     ) throws Exception {
         // Verificar si la contraseña cumple con los requisitos mínimos
         if (!verificarContraseña(contraseña)) {
-            throw new Exception("La contraseña no cumple con los requisitos mínimos.");
+            throw new Exception("sisa.");
         }
-
 
 
         // Crear un nuevo usuario y agregarlo a la lista de usuarios
         Model model = new Model(
                 email,
-                idInterno,
+                contraseña,
                 username,
                 idInterno
         );
@@ -75,6 +76,7 @@ public class Controller {
     }
 
     public boolean verificarUsuario(String userName) {
+
         for (Model model : cuentasEstudiantes) {
             if (model.getUserName().equals(userName)) {
                 return true; // El usuario existe
@@ -82,8 +84,10 @@ public class Controller {
         }
         return false; // El usuario no existe
     }
+
     public boolean validarCredenciales(String nombreUsuario, String contraseña) {
         // Buscar la persona por nombre
+        System.out.println(cuentasEstudiantes.toString());
         for (Model persona : cuentasEstudiantes) {
             if (persona.getUserName().equals(nombreUsuario) && persona.getContraseña().equals(contraseña)) {
                 return true;

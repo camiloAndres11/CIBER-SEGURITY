@@ -150,7 +150,11 @@ public class View {
             // Llamar al método registrarUsuario con todos los datos ingresados
             int num = (int) (1000 + Math.random() * 9000);
             String idInterno = usuario + num;
-            loginController.registrarUsuario(idInterno, usuario, email, contraseña);
+            loginController.registrarUsuario(
+                    email,
+                    usuario,
+                    idInterno,
+                    contraseña);
             System.out.println("CUENTA CREADA CON EXITO!!!");
             return true;
         } catch (InputMismatchException e) {
