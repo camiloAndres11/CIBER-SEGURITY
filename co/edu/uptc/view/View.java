@@ -169,8 +169,13 @@ public class View {
             boolean correoValido = false;
 
             do {
-                System.out.println("Ingrese su correo electrónico:");
+                System.out.println("Ingrese su correo electrónico (o escriba 'cancelar' para salir):");
                 String email = scanner.nextLine().trim();
+                
+                if (email.equalsIgnoreCase("cancelar")) {
+                    System.out.println("Proceso cancelado.");
+                    return;
+                }
 
                 if (loginController.verificarCorreoExistente(email)) {
                     boolean codigoCorrecto = false;
@@ -183,21 +188,38 @@ public class View {
                         boolean codigoIngresadoCorrecto = false;
                         while (!codigoIngresadoCorrecto) {
                             try {
-                                System.out.println("Ingrese el código de verificación:");
-                                int ingresoCodigo = scanner.nextInt();
-                                scanner.nextLine();
+                                System.out.println("Ingrese el código de verificación (o escriba 'cancelar' para salir):");
+                                String ingresoCodigoStr = scanner.nextLine().trim();
+
+                                if (ingresoCodigoStr.equalsIgnoreCase("cancelar")) {
+                                    System.out.println("Proceso cancelado.");
+                                    return;
+                                }
+
+                                int ingresoCodigo = Integer.parseInt(ingresoCodigoStr);
 
                                 if (codigoVerificacion == ingresoCodigo) {
                                     codigoCorrecto = true;
                                     codigoIngresadoCorrecto = true;
-                                    System.out.println("Código de verificación correcto. Ingrese una nueva contraseña:");
+                                    System.out.println("Código de verificación correcto. Ingrese una nueva contraseña (o escriba 'cancelar' para salir):");
 
                                     boolean contraseñaValida = false;
                                     do {
-                                        String nuevaContraseña = scanner.nextLine();
+                                        String nuevaContraseña = scanner.nextLine().trim();
+
+                                        if (nuevaContraseña.equalsIgnoreCase("cancelar")) {
+                                            System.out.println("Proceso cancelado.");
+                                            return;
+                                        }
+
                                         if (loginController.verificarContraseña(nuevaContraseña)) {
-                                            System.out.println("Confirme la nueva contraseña:");
-                                            String confirmacionContraseña = scanner.nextLine();
+                                            System.out.println("Confirme la nueva contraseña (o escriba 'cancelar' para salir):");
+                                            String confirmacionContraseña = scanner.nextLine().trim();
+
+                                            if (confirmacionContraseña.equalsIgnoreCase("cancelar")) {
+                                                System.out.println("Proceso cancelado.");
+                                                return;
+                                            }
 
                                             if (nuevaContraseña.equals(confirmacionContraseña)) {
                                                 loginController.actualizarContraseña(email, nuevaContraseña);
@@ -214,9 +236,8 @@ public class View {
                                 } else {
                                     System.out.println("Código de verificación incorrecto. Por favor, inténtelo de nuevo.");
                                 }
-                            } catch (InputMismatchException e) {
+                            } catch (InputMismatchException | NumberFormatException e) {
                                 System.out.println("Error: Ingrese un número válido para el código de verificación.");
-                                scanner.next(); // Limpia el buffer para evitar un bucle infinito
                             }
                         }
                     } while (!codigoCorrecto);
