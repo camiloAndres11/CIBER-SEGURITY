@@ -5,14 +5,44 @@ public class Model {
     private String contraseña;
     private String idInterno;
     private String userName;
+    private String telefono;
+    private String nombre;
+    private String apellido;
     public Model() {
     }
 
-    public Model(String correoElectronico, String contraseña, String idInterno, String userName) {
+    public Model(String correoElectronico, String contraseña, String idInterno, String userName,String telefono , String nombre, String apellido) {
         this.correoElectronico = correoElectronico;
         this.contraseña = contraseña;
         this.idInterno = idInterno;
         this.userName = userName;
+        this.telefono=telefono;
+        this.nombre=nombre;
+        this.apellido=apellido;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getCorreoElectronico() {
@@ -54,6 +84,9 @@ public class Model {
                 ", contraseña='" + contraseña + '\'' +
                 ", idInterno='" + idInterno + '\'' +
                 ", userName='" + userName + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
                 '}';
     }
 }

@@ -8,11 +8,12 @@ import java.util.Scanner;
 public class View {
     Scanner scanner = new Scanner(System.in);
     Controller loginController = new Controller();
-    private static final String[] dominiosCorreos = {"@uptc.edu.co", "@gmail.com", "@outlook.com"};
+
+
 
     public void MenuPrincipal() {
-        int desicion = 0;
-        while (desicion != 3) {
+        int decision = 0;
+        while (decision != 4) {
             System.out.println("BIENVENIDO AL INICIO DE SESION DE LA CARRERA DE SISTEMAS");
             System.out.println("""
                     ╔════════════════════════════════════════╗
@@ -21,26 +22,41 @@ public class View {
                     ║                                        ║
                     ║           2. REGISTRARSE               ║
                     ║                                        ║
-                    ║           3. SALIR                     ║
+                    ║           3. RECUPERAR CONTRASEÑA      ║
+                    ║                                        ║
+                    ║           4. SALIR                     ║
                     ║                                        ║
                     ╚════════════════════════════════════════╝
-                                       """);
-            desicion = scanner.nextInt();
-            scanner.nextLine();
-            switch (desicion) {
-                case 1:
-                    loguearseMenu();
-                    break;
-                case 2:
-                    if (registrarseMenu()) {
-                        System.out.println("welcome to uptc");
-                    }
-                    break;
-                case 3:
-                    break;
-                default:
-                    System.out.println("Digite una opción válida.");
-                    break;
+                    """);
+
+            try {
+                decision = scanner.nextInt();
+                scanner.nextLine(); // Clear the buffer
+
+                switch (decision) {
+                    case 1:
+                        loguearseMenu();
+                        break;
+                    case 2:
+                        if (registrarseMenu()) {
+                            System.out.println("Welcome to UPTC");
+                        }
+                        break;
+                    case 3:
+
+                        break;
+                    case 4:
+                        System.out.println("Saliendo del sistema...");
+                        break;
+                    default:
+                        System.out.println("Digite una opción válida.");
+                        break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Por favor, ingrese un número válido.");
+                scanner.next();
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
@@ -99,45 +115,45 @@ public class View {
                 }
             }
 
-            String email = "";
+            String telefono = "";
             while (true) {
-                System.out.println("Ingrese el email (sin la extensión):");
-                email = scanner.nextLine().trim();
-                if (email.isEmpty()) {
+                System.out.println("Ingrese su numero de telefono:");
+                telefono = scanner.nextLine().trim();
+                if (telefono.isEmpty()) {
                     System.out.println("No puede estar vacío");
                 } else {
                     break;
                 }
             }
 
-            int opcionEmail = 0;
-            boolean entradaValida = false;
-            while (!entradaValida) {
-                System.out.println("Seleccione la extensión de su email:");
-                for (int i = 0; i < dominiosCorreos.length; i++) {
-                    System.out.printf("%d. %s%n", i + 1, dominiosCorreos[i]);
-                }
-                if (scanner.hasNextInt()) {
-                    opcionEmail = scanner.nextInt();
-                    if (opcionEmail >= 1 && opcionEmail <= dominiosCorreos.length) {
-                        entradaValida = true;
-                    } else {
-                        System.out.println("Ingresó un valor fuera de rango.");
-                    }
+            String nombre = "";
+            while (true) {
+                System.out.println("Ingrese su nombre:");
+                nombre = scanner.nextLine().trim();
+                if (nombre.isEmpty()) {
+                    System.out.println("No puede estar vacío");
                 } else {
-                    System.out.println("Ingresó un valor no válido. Por favor, ingrese un número.");
-                    scanner.next();
+                    break;
                 }
             }
 
-            scanner.nextLine(); // Limpiar el buffer de entrada
-
-            email += dominiosCorreos[opcionEmail - 1];
-            System.out.println("Su email completo es: " + email);
+            String apellido = "";
+            while (true) {
+                System.out.println("Ingrese sus apellidos:");
+                apellido = scanner.nextLine().trim();
+                if (apellido.isEmpty()) {
+                    System.out.println("No puede estar vacío");
+                } else {
+                    break;
+                }
+            }
 
             int num = (int) (1000 + Math.random() * 9000);
             String idInterno = usuario + num;
-            loginController.registrarUsuario(email, usuario, idInterno, contraseña);
+            String email = nombre + num + "@uptc.edu.co";
+            System.out.println("Su email completo es: " + email);
+
+            loginController.registrarUsuario(email, usuario, idInterno, contraseña, telefono, nombre, apellido);
             System.out.println("CUENTA CREADA CON ÉXITO!!!");
             return true;
         } catch (InputMismatchException e) {
@@ -148,4 +164,8 @@ public class View {
         }
         return false;
     }
+    public void recuperarContraseña(){
+
+    }
+
 }

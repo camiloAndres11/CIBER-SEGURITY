@@ -45,11 +45,11 @@ public class Controller {
         return countNumbers >= 2;
     }
 
-    public void registrarUsuario(String email, String idInterno, String username, String contraseña) throws Exception {
+    public void registrarUsuario(String email, String idInterno, String username, String contraseña, String telefono, String nombre, String apellido) throws Exception {
         if (!verificarContraseña(contraseña)) {
             throw new Exception("La contraseña no cumple con los requisitos mínimos.");
         }
-        Model model = new Model(email, contraseña, username, idInterno);
+        Model model = new Model(email, contraseña, username, idInterno, telefono, nombre, apellido);
         cuentasEstudiantes.add(model);
         JsonFile.writeToJson(cuentasEstudiantes, FILE_PATH);
     }
