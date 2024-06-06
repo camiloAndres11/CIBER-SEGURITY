@@ -1,6 +1,7 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\Hp\\Desktop\\gson-2.10.1.jar"
+        "c:\\Users\\Hp\\Desktop\\gson-2.10.1.jar",
+        "c:\\Users\\57313\\Documents\\java\\Serialize-Desearialize-object-json\\lib\\gson-2.10.1.jar"
     ]
 }

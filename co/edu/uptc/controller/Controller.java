@@ -71,4 +71,28 @@ public class Controller {
         }
         return false;
     }
+
+    public void actualizarContraseña(String email, String nuevaContraseña) {
+        for (Model model : cuentasEstudiantes) {
+            if (model.getCorreoElectronico().equals(email)) {
+                model.setContraseña(nuevaContraseña);
+                try {
+                    JsonFile.writeToJson(cuentasEstudiantes, FILE_PATH);
+                } catch (IOException e) {
+                    System.out.println("Error al actualizar la contraseña: " + e.getMessage());
+                }
+                break;
+            }
+        }
+    }
+
+    public boolean verificarCorreoExistente(String email) {
+        for (Model model : cuentasEstudiantes) {
+            if (model.getCorreoElectronico().equals(email)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+

@@ -43,7 +43,7 @@ public class View {
                         }
                         break;
                     case 3:
-
+                        recuperarContraseña();
                         break;
                     case 4:
                         System.out.println("Saliendo del sistema...");
@@ -164,8 +164,49 @@ public class View {
         }
         return false;
     }
-    public void recuperarContraseña(){
 
+    public void recuperarContraseña() {
+        Scanner scanner = new Scanner(System.in);
+        Controller controller = new Controller();
+    
+        System.out.println("Ingrese su correo electrónico:");
+        String email = scanner.nextLine().trim();
+    
+        if (controller.verificarCorreoExistente(email)) {
+            System.out.println("Se ha enviado un código de verificación a su correo electrónico.");
+            int codigoVerificacion = generarCodigoVerificacion();
+            System.out.println(codigoVerificacion);
+            System.out.println("Ingrese el código de verificación:");
+            int ingresoCodigo = scanner.nextInt();
+            scanner.nextLine(); 
+    
+            if (codigoVerificacion == ingresoCodigo) {
+                System.out.println("Código de verificación correcto. Ingrese una nueva contraseña:");
+                String nuevaContraseña = scanner.nextLine();
+    
+                if (controller.verificarContraseña(nuevaContraseña)) {
+                    System.out.println("Confirme la nueva contraseña:");
+                    String confirmacionContraseña = scanner.nextLine();
+    
+                    if (nuevaContraseña.equals(confirmacionContraseña)) {
+                        controller.actualizarContraseña(email, nuevaContraseña);
+                        System.out.println("Contraseña actualizada exitosamente.");
+                    } else {
+                        System.out.println("Las contraseñas no coinciden.");
+                    }
+                } else {
+                    System.out.println("La contraseña no cumple con los requisitos mínimos.");
+                }
+            } else {
+                System.out.println("Código de verificación incorrecto.");
+            }
+        } else {
+            System.out.println("El correo electrónico no está registrado.");
+        }
     }
-
+    
+    private int generarCodigoVerificacion() {
+        return (int) (100000 + Math.random() * 900000);
+    }
 }
+
