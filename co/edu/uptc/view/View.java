@@ -166,47 +166,78 @@ public class View {
 
     public void recuperarContraseña() {
         try {
-            System.out.println("Ingrese su correo electrónico:");
-            String email = scanner.nextLine().trim();
+            boolean correoValido = false;
 
-            if (loginController.verificarCorreoExistente(email)) {
-                System.out.println("Se ha enviado un código de verificación a su correo electrónico.");
-                int codigoVerificacion = generarCodigoVerificacion();
-                System.out.println(codigoVerificacion);
-                System.out.println("Ingrese el código de verificación:");
-                int ingresoCodigo = scanner.nextInt();
-                scanner.nextLine();
+            do {
+                System.out.println("Ingrese su correo electrónico:");
+                String email = scanner.nextLine().trim();
 
-                if (codigoVerificacion == ingresoCodigo) {
-                    System.out.println("Código de verificación correcto. Ingrese una nueva contraseña:");
-                    String nuevaContraseña = scanner.nextLine();
+                if (loginController.verificarCorreoExistente(email)) {
+                    boolean codigoCorrecto = false;
 
-                    if (loginController.verificarContraseña(nuevaContraseña)) {
-                        System.out.println("Confirme la nueva contraseña:");
-                        String confirmacionContraseña = scanner.nextLine();
+                    do {
+                        System.out.println("Se ha enviado un código de verificación a su correo electrónico.");
+                        int codigoVerificacion = generarCodigoVerificacion();
+                        System.out.println(codigoVerificacion); // Eliminar esta línea en producción, se muestra para pruebas
 
-                        if (nuevaContraseña.equals(confirmacionContraseña)) {
-                            loginController.actualizarContraseña(email, nuevaContraseña);
-                            System.out.println("Contraseña actualizada exitosamente.");
-                        } else {
-                            System.out.println("Las contraseñas no coinciden.");
+                        boolean codigoIngresadoCorrecto = false;
+                        while (!codigoIngresadoCorrecto) {
+                            try {
+                                System.out.println("Ingrese el código de verificación:");
+                                int ingresoCodigo = scanner.nextInt();
+                                scanner.nextLine();
+
+                                if (codigoVerificacion == ingresoCodigo) {
+                                    codigoCorrecto = true;
+                                    codigoIngresadoCorrecto = true;
+                                    System.out.println("Código de verificación correcto. Ingrese una nueva contraseña:");
+
+                                    boolean contraseñaValida = false;
+                                    do {
+                                        String nuevaContraseña = scanner.nextLine();
+                                        if (loginController.verificarContraseña(nuevaContraseña)) {
+                                            System.out.println("Confirme la nueva contraseña:");
+                                            String confirmacionContraseña = scanner.nextLine();
+
+                                            if (nuevaContraseña.equals(confirmacionContraseña)) {
+                                                loginController.actualizarContraseña(email, nuevaContraseña);
+                                                System.out.println("Contraseña actualizada exitosamente.");
+                                                contraseñaValida = true;
+                                            } else {
+                                                System.out.println("Las contraseñas no coinciden. Inténtelo de nuevo.");
+                                            }
+                                        } else {
+                                            System.out.println("La contraseña no cumple con los requisitos mínimos. Inténtelo de nuevo:");
+                                        }
+                                    } while (!contraseñaValida);
+
+                                } else {
+                                    System.out.println("Código de verificación incorrecto. Por favor, inténtelo de nuevo.");
+                                }
+                            } catch (InputMismatchException e) {
+                                System.out.println("Error: Ingrese un número válido para el código de verificación.");
+                                scanner.next(); // Limpia el buffer para evitar un bucle infinito
+                            }
                         }
-                    } else {
-                        System.out.println("La contraseña no cumple con los requisitos mínimos.");
-                    }
+                    } while (!codigoCorrecto);
+
+                    correoValido = true;
+
                 } else {
-                    System.out.println("Código de verificación incorrecto.");
+                    System.out.println("El correo electrónico no está registrado. Por favor, inténtelo de nuevo.");
                 }
-            } else {
-                System.out.println("El correo electrónico no está registrado.");
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("Error: Ingrese un número válido.");
-            scanner.next();
+            } while (!correoValido);
+
         } catch (Exception e) {
             System.out.println("Error inesperado: " + e.getMessage());
         }
     }
+
+
+
+
+
+
 
     private int generarCodigoVerificacion() {
         return (int) (100000 + Math.random() * 900000);
