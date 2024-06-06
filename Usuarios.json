@@ -7,5 +7,23 @@
     "telefono": "3134899430",
     "nombre": "sergio",
     "apellido": "acero"
+  },
+  {
+    "correoElectronico": "andres camilo6962@uptc.edu.co",
+    "contraseña": "Camilo21*",
+    "idInterno": "cami6962",
+    "userName": "cami",
+    "telefono": "323232332",
+    "nombre": "andres camilo",
+    "apellido": "niño amaya"
+  },
+  {
+    "correoElectronico": "cami2400@uptc.edu.co",
+    "contraseña": "Santiago1212+",
+    "idInterno": "2022127332400",
+    "userName": "202212733",
+    "telefono": "3228753140",
+    "nombre": "camilo andres",
+    "apellido": "niño amaya"
   }
 ]
