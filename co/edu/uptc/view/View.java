@@ -201,7 +201,7 @@ public class View {
                                 if (codigoVerificacion == ingresoCodigo) {
                                     codigoCorrecto = true;
                                     codigoIngresadoCorrecto = true;
-                                    System.out.println("Código de verificación correcto. Ingrese una nueva contraseña (o escriba 'cancelar' para salir):");
+                                    System.out.println("Código de verificación correcto. Ingrese una nueva contraseña (o escriba 'cancelar' para salir) (mínimo 8 caracteres, una mayúscula, una minúscula, al menos 2 números y un carácter especial (.,*)):");
 
                                     boolean contraseñaValida = false;
                                     do {
