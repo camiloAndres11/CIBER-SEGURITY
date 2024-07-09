@@ -1,291 +1,241 @@
 package co.edu.uptc.view;
 
 import co.edu.uptc.controller.Controller;
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 
-public class View {
-    Scanner scanner = new Scanner(System.in);
-    Controller loginController = new Controller();
+public class View extends Application {
 
-    public void MenuPrincipal() {
-        int decision = 0;
-        while (decision != 4) {
-            System.out.println("BIENVENIDO AL INICIO DE SESIÓN DE LA CARRERA DE SISTEMAS");
-            System.out.println("""
-                    ╔════════════════════════════════════════╗
-                    ║                                        ║
-                    ║           1. INICIAR SESIÓN            ║
-                    ║                                        ║
-                    ║           2. REGISTRARSE               ║
-                    ║                                        ║
-                    ║           3. RECUPERAR CONTRASEÑA      ║
-                    ║                                        ║
-                    ║           4. SALIR                     ║
-                    ║                                        ║
-                    ╚════════════════════════════════════════╝
-                    """);
+    private Controller loginController = new Controller();
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+        primaryStage.setTitle("Sistema de Gestión UPTC");
+
+        GridPane loginGrid = createLoginForm(primaryStage);
+        Scene loginScene = new Scene(loginGrid, 400, 300);
+
+        primaryStage.setScene(loginScene);
+        primaryStage.show();
+    }
+
+    private GridPane createLoginForm(Stage primaryStage) {
+        GridPane loginGrid = new GridPane();
+        loginGrid.setPadding(new Insets(10));
+        loginGrid.setHgap(10);
+        loginGrid.setVgap(10);
+
+        Label usernameLabel = new Label("Nombre de usuario:");
+        TextField usernameInput = new TextField();
+        Label passwordLabel = new Label("Contraseña:");
+        PasswordField passwordInput = new PasswordField();
+        Button loginButton = new Button("Iniciar Sesión");
+        Button registerButton = new Button("Registrarse");
+        Button recoverButton = new Button("Recuperar Contraseña");
+
+        GridPane.setConstraints(usernameLabel, 0, 0);
+        GridPane.setConstraints(usernameInput, 1, 0);
+        GridPane.setConstraints(passwordLabel, 0, 1);
+        GridPane.setConstraints(passwordInput, 1, 1);
+        GridPane.setConstraints(loginButton, 1, 2);
+        GridPane.setConstraints(registerButton, 1, 3);
+        GridPane.setConstraints(recoverButton, 1, 4);
+
+        loginButton.setOnAction(e -> {
+            String username = usernameInput.getText().trim();
+            String password = passwordInput.getText().trim();
+            if (loginController.validarCredenciales(username, password)) {
+                showMainScreen(primaryStage);
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Credenciales incorrectas.");
+            }
+        });
+
+        registerButton.setOnAction(e -> showRegisterForm(primaryStage));
+        recoverButton.setOnAction(e -> showRecoverPasswordForm(primaryStage));
+
+        loginGrid.getChildren().addAll(usernameLabel, usernameInput, passwordLabel, passwordInput, loginButton, registerButton, recoverButton);
+
+        return loginGrid;
+    }
+
+    private void showMainScreen(Stage primaryStage) {
+        GridPane mainGrid = new GridPane();
+        mainGrid.setPadding(new Insets(10));
+        mainGrid.setHgap(10);
+        mainGrid.setVgap(10);
+
+        Label welcomeLabel = new Label("Bienvenido a la Escuela de Sistemas UPTC");
+        Button logoutButton = new Button("Cerrar Sesión");
+
+        GridPane.setConstraints(welcomeLabel, 0, 0);
+        GridPane.setConstraints(logoutButton, 0, 1);
+
+        logoutButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
+
+        mainGrid.getChildren().addAll(welcomeLabel, logoutButton);
+
+        Scene mainScene = new Scene(mainGrid, 400, 300);
+        primaryStage.setScene(mainScene);
+    }
+
+    private void showRegisterForm(Stage primaryStage) {
+        GridPane registerGrid = new GridPane();
+        registerGrid.setPadding(new Insets(10));
+        registerGrid.setHgap(10);
+        registerGrid.setVgap(10);
+
+        Label usernameLabel = new Label("ID de usuario:");
+        TextField usernameInput = new TextField();
+        Label passwordLabel = new Label("Contraseña:");
+        PasswordField passwordInput = new PasswordField();
+        Label phoneLabel = new Label("Número de teléfono:");
+        TextField phoneInput = new TextField();
+        Label firstNameLabel = new Label("Nombre:");
+        TextField firstNameInput = new TextField();
+        Label lastNameLabel = new Label("Apellidos:");
+        TextField lastNameInput = new TextField();
+        Button registerButton = new Button("Registrar");
+
+        GridPane.setConstraints(usernameLabel, 0, 0);
+        GridPane.setConstraints(usernameInput, 1, 0);
+        GridPane.setConstraints(passwordLabel, 0, 1);
+        GridPane.setConstraints(passwordInput, 1, 1);
+        GridPane.setConstraints(phoneLabel, 0, 2);
+        GridPane.setConstraints(phoneInput, 1, 2);
+        GridPane.setConstraints(firstNameLabel, 0, 3);
+        GridPane.setConstraints(firstNameInput, 1, 3);
+        GridPane.setConstraints(lastNameLabel, 0, 4);
+        GridPane.setConstraints(lastNameInput, 1, 4);
+        GridPane.setConstraints(registerButton, 1, 5);
+
+        registerButton.setOnAction(e -> {
+            String username = usernameInput.getText().trim();
+            String password = passwordInput.getText().trim();
+            String phone = phoneInput.getText().trim();
+            String firstName = firstNameInput.getText().trim();
+            String lastName = lastNameInput.getText().trim();
 
             try {
-                decision = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el buffer
-
-                switch (decision) {
-                    case 1:
-                        loguearseMenu();
-                        break;
-                    case 2:
-                        registrarseMenu();
-                        break;
-                    case 3:
-                        recuperarContraseña();
-                        break;
-                    case 4:
-                        System.out.println("Saliendo del sistema...");
-                        break;
-                    default:
-                        System.out.println("Digite una opción válida.");
-                        break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Por favor, ingrese un número válido.");
-                scanner.next();
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
+                loginController.registrarUsuario(username, password, phone, firstName, lastName, lastName, lastName);
+                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
+                primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+            } catch (Exception ex) {
+                showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
             }
-        }
+        });
+
+        registerGrid.getChildren().addAll(usernameLabel, usernameInput, passwordLabel, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput, registerButton);
+
+        primaryStage.setScene(new Scene(registerGrid, 400, 300));
     }
 
-    public void loguearseMenu() {
-        try {
-            System.out.println("Ingrese su nombre de usuario:");
-            String nombreUsuario = scanner.nextLine().trim();
+    private void showRecoverPasswordForm(Stage primaryStage) {
+        GridPane recoverGrid = new GridPane();
+        recoverGrid.setPadding(new Insets(10));
+        recoverGrid.setHgap(10);
+        recoverGrid.setVgap(10);
 
-            System.out.println("Ingrese su contraseña:");
-            String contraseña = scanner.nextLine().trim();
+        Label emailLabel = new Label("Correo electrónico:");
+        TextField emailInput = new TextField();
+        Button recoverButton = new Button("Recuperar");
 
-            if (nombreUsuario.isEmpty() || contraseña.isEmpty()) {
-                throw new IllegalArgumentException("El nombre de usuario y la contraseña no pueden estar vacíos.");
-            }
+        GridPane.setConstraints(emailLabel, 0, 0);
+        GridPane.setConstraints(emailInput, 1, 0);
+        GridPane.setConstraints(recoverButton, 1, 1);
 
-            if (loginController.validarCredenciales(nombreUsuario, contraseña)) {
-                System.out.println("Bienvenido, " + nombreUsuario + ".");
-                while (!homeUptc()) {
-                    // Aquí puedes agregar el código para el home
-                }
-            } else {
-                System.out.println("Inicio de sesión fallido. Verifique sus credenciales.");
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("Error: Ingrese datos válidos para el nombre de usuario y la contraseña.");
-            scanner.nextLine();
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error inesperado: " + e.getMessage());
-        }
-    }
+        recoverButton.setOnAction(e -> {
+            String email = emailInput.getText().trim();
+            if (loginController.verificarCorreoExistente(email)) {
+                int verificationCode = generarCodigoVerificacion();
+                System.out.println("Código de verificación: " + verificationCode); // Para pruebas, debería enviarse por correo
 
-    public boolean registrarseMenu() {
-        try {
-            String usuario = "";
-            while (true) {
-                System.out.println("Ingrese el ID de usuario:");
-                usuario = scanner.nextLine().trim();
-                if (usuario.isEmpty()) {
-                    System.out.println("El ID de usuario no puede estar vacío.");
-                } else if (loginController.verificarUsuario(usuario.toLowerCase())) {
-                    System.out.println("El nombre de usuario ya está en uso. Por favor, ingrese otro.");
-                } else {
-                    break;
-                }
-            }
+                TextInputDialog codeDialog = new TextInputDialog();
+                codeDialog.setTitle("Código de verificación");
+                codeDialog.setHeaderText("Se ha enviado un código de verificación a su correo.");
+                codeDialog.setContentText("Ingrese el código:");
 
-            String contraseña = "";
-            while (true) {
-                System.out.println("Ingrese la contraseña (mínimo 8 caracteres, una mayúscula, una minúscula, al menos 2 números y un carácter especial (.,*)):");
-                contraseña = scanner.nextLine().trim();
-                if (!loginController.verificarContraseña(contraseña)) {
-                    System.out.println("La contraseña no cumple con los requisitos mínimos.");
-                } else {
-                    break;
-                }
-            }
+                codeDialog.showAndWait().ifPresent(code -> {
+                    if (Integer.parseInt(code) == verificationCode) {
+                        Dialog<ButtonType> passwordDialog = new Dialog<>();
+                        passwordDialog.setTitle("Nueva contraseña");
 
-            String telefono = "";
-            while (true) {
-                System.out.println("Ingrese su número de teléfono:");
-                telefono = scanner.nextLine().trim();
-                if (telefono.isEmpty()) {
-                    System.out.println("El número de teléfono no puede estar vacío.");
-                } else {
-                    break;
-                }
-            }
+                        GridPane passwordGrid = new GridPane();
+                        passwordGrid.setPadding(new Insets(10));
+                        passwordGrid.setHgap(10);
+                        passwordGrid.setVgap(10);
 
-            String nombre = "";
-            while (true) {
-                System.out.println("Ingrese su nombre:");
-                nombre = scanner.nextLine().trim();
-                if (nombre.isEmpty()) {
-                    System.out.println("El nombre no puede estar vacío.");
-                } else {
-                    break;
-                }
-            }
+                        Label newPasswordLabel = new Label("Nueva contraseña:");
+                        PasswordField newPasswordInput = new PasswordField();
+                        Label confirmPasswordLabel = new Label("Confirmar contraseña:");
+                        PasswordField confirmPasswordInput = new PasswordField();
 
-            String apellido = "";
-            while (true) {
-                System.out.println("Ingrese sus apellidos:");
-                apellido = scanner.nextLine().trim();
-                if (apellido.isEmpty()) {
-                    System.out.println("Los apellidos no pueden estar vacíos.");
-                } else {
-                    break;
-                }
-            }
+                        GridPane.setConstraints(newPasswordLabel, 0, 0);
+                        GridPane.setConstraints(newPasswordInput, 1, 0);
+                        GridPane.setConstraints(confirmPasswordLabel, 0, 1);
+                        GridPane.setConstraints(confirmPasswordInput, 1, 1);
 
-            int num = (int) (1000 + Math.random() * 9000);
-            String idInterno = usuario + num;
-            String email = nombre.substring(0, 4) + num + "@uptc.edu.co";
-            System.out.println("Su correo electrónico es: " + email);
+                        passwordGrid.getChildren().addAll(newPasswordLabel, newPasswordInput, confirmPasswordLabel, confirmPasswordInput);
 
-            loginController.registrarUsuario(email, usuario, idInterno, contraseña, telefono, nombre, apellido);
-            System.out.println("¡CUENTA CREADA CON ÉXITO!");
-            return true;
-        } catch (InputMismatchException e) {
-            System.out.println("Ingresaste un valor erróneo.");
-            scanner.next();
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        return false;
-    }
+                        passwordDialog.getDialogPane().setContent(passwordGrid);
+                        passwordDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-    public void recuperarContraseña() {
-        try {
-            boolean correoValido = false;
+                        passwordDialog.showAndWait().ifPresent(result -> {
+                            if (result == ButtonType.OK) {
+                                String newPassword = newPasswordInput.getText().trim();
+                                String confirmPassword = confirmPasswordInput.getText().trim();
 
-            do {
-                System.out.println("Ingrese su correo electrónico (o escriba 'cancelar' para salir):");
-                String email = scanner.nextLine().trim();
-                
-                if (email.equalsIgnoreCase("cancelar")) {
-                    System.out.println("Proceso cancelado.");
-                    return;
-                }
-
-                if (loginController.verificarCorreoExistente(email)) {
-                    boolean codigoCorrecto = false;
-
-                    do {
-                        System.out.println("Se ha enviado un código de verificación a su correo electrónico.");
-                        int codigoVerificacion = generarCodigoVerificacion();
-                        System.out.println(codigoVerificacion); // Eliminar esta línea en producción, se muestra para pruebas
-
-                        boolean codigoIngresadoCorrecto = false;
-                        while (!codigoIngresadoCorrecto) {
-                            try {
-                                System.out.println("Ingrese el código de verificación (o escriba 'cancelar' para salir):");
-                                String ingresoCodigoStr = scanner.nextLine().trim();
-
-                                if (ingresoCodigoStr.equalsIgnoreCase("cancelar")) {
-                                    System.out.println("Proceso cancelado.");
-                                    return;
-                                }
-
-                                int ingresoCodigo = Integer.parseInt(ingresoCodigoStr);
-
-                                if (codigoVerificacion == ingresoCodigo) {
-                                    codigoCorrecto = true;
-                                    codigoIngresadoCorrecto = true;
-                                    System.out.println("Código de verificación correcto. Ingrese una nueva contraseña (o escriba 'cancelar' para salir) (mínimo 8 caracteres, una mayúscula, una minúscula, al menos 2 números y un carácter especial (.,*)):");
-
-                                    boolean contraseñaValida = false;
-                                    do {
-                                        String nuevaContraseña = scanner.nextLine().trim();
-
-                                        if (nuevaContraseña.equalsIgnoreCase("cancelar")) {
-                                            System.out.println("Proceso cancelado.");
-                                            return;
-                                        }
-
-                                        if (loginController.verificarContraseña(nuevaContraseña)) {
-                                            System.out.println("Confirme la nueva contraseña (o escriba 'cancelar' para salir):");
-                                            String confirmacionContraseña = scanner.nextLine().trim();
-
-                                            if (confirmacionContraseña.equalsIgnoreCase("cancelar")) {
-                                                System.out.println("Proceso cancelado.");
-                                                return;
-                                            }
-
-                                            if (nuevaContraseña.equals(confirmacionContraseña)) {
-                                                loginController.actualizarContraseña(email, nuevaContraseña);
-                                                System.out.println("Contraseña actualizada exitosamente.");
-                                                contraseñaValida = true;
-                                            } else {
-                                                System.out.println("Las contraseñas no coinciden. Inténtelo de nuevo.");
-                                            }
-                                        } else {
-                                            System.out.println("La contraseña no cumple con los requisitos mínimos. Inténtelo de nuevo:");
-                                        }
-                                    } while (!contraseñaValida);
-
+                                if (newPassword.equals(confirmPassword) && loginController.verificarContraseña(newPassword)) {
+                                    try {
+                                        loginController.actualizarContraseña(email, newPassword);
+                                        showAlert(Alert.AlertType.INFORMATION, "Éxito", "Contraseña cambiada exitosamente.");
+                                        primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                                    } catch (Exception ex) {
+                                        showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                                    }
                                 } else {
-                                    System.out.println("Código de verificación incorrecto. Por favor, inténtelo de nuevo.");
+                                    showAlert(Alert.AlertType.ERROR, "Error", "Las contraseñas no coinciden o no cumplen los requisitos.");
                                 }
-                            } catch (InputMismatchException | NumberFormatException e) {
-                                System.out.println("Error: Ingrese un número válido para el código de verificación.");
                             }
-                        }
-                    } while (!codigoCorrecto);
+                        });
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Error", "Código de verificación incorrecto.");
+                    }
+                });
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Correo electrónico no encontrado.");
+            }
+        });
 
-                    correoValido = true;
+        recoverGrid.getChildren().addAll(emailLabel, emailInput, recoverButton);
 
-                } else {
-                    System.out.println("El correo electrónico no está registrado. Por favor, inténtelo de nuevo.");
-                }
-            } while (!correoValido);
-
-        } catch (Exception e) {
-            System.out.println("Error inesperado: " + e.getMessage());
-        }
+        primaryStage.setScene(new Scene(recoverGrid, 400, 300));
     }
-
-
-
-
-
-
 
     private int generarCodigoVerificacion() {
-        return (int) (100000 + Math.random() * 900000);
+        return (int) (1000 + Math.random() * 9000);
     }
 
-    public boolean homeUptc() {
-        try {
-            int aux = 0;
-            System.out.println("""
-                    ╔════════════════════════════════════════╗
-                    ║                                        ║
-                    ║    BIENVENIDO A LA ESCUELA DE SISTEMAS ║
-                    ║                 UPTC                   ║
-                    ║                                        ║
-                    ╚════════════════════════════════════════╝
-                    """);
-            System.out.println("Si quieres cerrar sesión, presiona 1");
-            aux = scanner.nextInt();
-            if (aux == 1) {
-                return true;
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("Error: Ingrese un número válido.");
-            scanner.next();
-        } catch (Exception e) {
-            System.out.println("Error inesperado: " + e.getMessage());
-        }
-        return false;
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void MenuPrincipal() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'MenuPrincipal'");
     }
 }
