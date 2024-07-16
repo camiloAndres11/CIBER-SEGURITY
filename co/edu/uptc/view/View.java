@@ -125,9 +125,11 @@ public class View extends Application {
             String phone = phoneInput.getText().trim();
             String firstName = firstNameInput.getText().trim();
             String lastName = lastNameInput.getText().trim();
+            String email="pruebaEmail";
+            String idInterno="pruebaID";
 
             try {
-                loginController.registrarUsuario(username, password, phone, firstName, lastName, lastName, lastName);
+                loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
                 primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
             } catch (Exception ex) {

@@ -49,7 +49,7 @@ public class Controller {
         if (!verificarContraseña(contraseña)) {
             throw new Exception("La contraseña no cumple con los requisitos mínimos.");
         }
-        Model model = new Model(email, contraseña, username, idInterno, telefono, nombre, apellido);
+        Model model = new Model(email, contraseña, idInterno, username,telefono, nombre, apellido);
         cuentasEstudiantes.add(model);
         JsonFile.writeToJson(cuentasEstudiantes, FILE_PATH);
     }
