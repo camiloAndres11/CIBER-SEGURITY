@@ -94,6 +94,8 @@ public class View extends Application {
         registerGrid.setPadding(new Insets(10));
         registerGrid.setHgap(10);
         registerGrid.setVgap(10);
+        int min = 1000;
+        int max = 9999;
 
         Label usernameLabel = new Label("ID de usuario:");
         TextField usernameInput = new TextField();
@@ -125,8 +127,10 @@ public class View extends Application {
             String phone = phoneInput.getText().trim();
             String firstName = firstNameInput.getText().trim();
             String lastName = lastNameInput.getText().trim();
-            String email="pruebaEmail";
-            String idInterno="pruebaID";
+            String email=firstName+"@uptc.edu.co";
+            int randomNumber = (int)(Math.random() * (max - min + 1)) + min;
+            String idInterno=randomNumber+lastName;
+            ;
 
             try {
                 loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
