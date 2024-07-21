@@ -1,6 +1,11 @@
 package co.edu.uptc.view;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import co.edu.uptc.controller.Controller;
+import co.edu.uptc.controller.JsonFile;
+import co.edu.uptc.model.Model;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -95,7 +100,7 @@ public class View extends Application {
         registerGrid.setHgap(10);
         registerGrid.setVgap(10);
 
-        Label usernameLabel = new Label("ID de usuario:");
+        Label usernameLabel = new Label("Nombre de usuario:");
         TextField usernameInput = new TextField();
         Label passwordLabel = new Label("Contraseña:");
         PasswordField passwordInput = new PasswordField();
@@ -125,16 +130,56 @@ public class View extends Application {
             String phone = phoneInput.getText().trim();
             String firstName = firstNameInput.getText().trim();
             String lastName = lastNameInput.getText().trim();
-            String email="pruebaEmail";
-            String idInterno="pruebaID";
+            String email=firstName.toLowerCase() +"." + lastName.toLowerCase() + "@uptc.edu.co";
+            int number= (int) (1000 + Math.random() * 9000);
+            String idInterno=username + number;
+
+            boolean isNumber=true;
 
             try {
-                loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
-                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
-                primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-            } catch (Exception ex) {
-                showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                Integer.parseInt(phone);
+            } catch (NumberFormatException exception) {
+                isNumber = false;
             }
+
+            String FILE_PATH = "co\\edu\\uptc\\persistence\\Usuarios.json";
+            boolean isExist=false;
+            try {
+                ArrayList<Model> cuentasEstudiantes = new ArrayList<>(JsonFile.readFromJson(FILE_PATH));
+                for(Model model:cuentasEstudiantes) {
+                    if (model.getUserName().equals(username)) {
+                        isExist=true;
+                    }
+                }
+                
+                if(!isExist) {
+                    if(isNumber)    {
+                        try {
+                            loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
+                            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
+                            primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                        } catch (Exception ex) {
+                            showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                        }
+                    }else if(!isNumber)  {
+                        showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
+
+                    }
+                   
+                }else if (isExist){
+                    showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
+                } else {
+                    
+                }
+
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+            
+            
+           
         });
 
         registerGrid.getChildren().addAll(usernameLabel, usernameInput, passwordLabel, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput, registerButton);
@@ -239,5 +284,6 @@ public class View extends Application {
     public void MenuPrincipal() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'MenuPrincipal'");
+    
     }
 }

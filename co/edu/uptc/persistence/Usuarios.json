@@ -1,0 +1,20 @@
+[
+  {
+    "correoElectronico": "pruebaEmail",
+    "contraseña": "Feeeee45#",
+    "idInterno": "pruebaID",
+    "userName": "12556",
+    "telefono": "56637383",
+    "nombre": "andres",
+    "apellido": "torres"
+  },
+  {
+    "correoElectronico": "andres.torres@uptc.edu.co",
+    "contraseña": "Andres45#",
+    "idInterno": "Andres4240",
+    "userName": "Andres",
+    "telefono": "86353637",
+    "nombre": "Andres",
+    "apellido": "Torres"
+  }
+]

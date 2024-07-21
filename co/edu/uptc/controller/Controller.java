@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Controller {
     private ArrayList<Model> cuentasEstudiantes;
-    private static final String FILE_PATH = "Usuarios.json";
+    private static final String FILE_PATH = "co\\edu\\uptc\\persistence\\Usuarios.json";
 
 
     public Controller() {

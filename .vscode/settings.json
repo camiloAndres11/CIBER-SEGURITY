@@ -2,6 +2,15 @@
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
         "c:\\Users\\Hp\\Desktop\\gson-2.10.1.jar",
-        "c:\\Users\\57313\\Documents\\java\\Serialize-Desearialize-object-json\\lib\\gson-2.10.1.jar"
+        "c:\\Users\\57313\\Documents\\java\\Serialize-Desearialize-object-json\\lib\\gson-2.10.1.jar",
+        "c:\\Users\\FELIPE\\Desktop\\programacion 2\\gson-2.10.1.jar",
+        "c:\\javaFx\\lib\\javafx.base.jar",
+        "c:\\javaFx\\lib\\javafx.controls.jar",
+        "c:\\javaFx\\lib\\javafx.fxml.jar",
+        "c:\\javaFx\\lib\\javafx.graphics.jar",
+        "c:\\javaFx\\lib\\javafx.media.jar",
+        "c:\\javaFx\\lib\\javafx.swing.jar",
+        "c:\\javaFx\\lib\\javafx.web.jar",
+        "c:\\javaFx\\lib\\javafx-swt.jar"
     ]
 }
