@@ -3,14 +3,24 @@ package co.edu.uptc.view;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 import co.edu.uptc.controller.Controller;
 import co.edu.uptc.controller.JsonFile;
 import co.edu.uptc.model.Model;
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -110,19 +120,68 @@ public class View extends Application {
         TextField firstNameInput = new TextField();
         Label lastNameLabel = new Label("Apellidos:");
         TextField lastNameInput = new TextField();
+        Button returnButton=new Button("Volver");
         Button registerButton = new Button("Registrar");
+        
+        usernameLabel.setPrefWidth(150); 
+        passwordLabel.setPrefWidth(150);
+        phoneLabel.setPrefWidth(150);
+        firstNameLabel.setPrefWidth(150);
+        lastNameLabel.setPrefWidth(150);
+        returnButton.setPrefWidth(150);
+        registerButton.setPrefWidth(150);
 
-        GridPane.setConstraints(usernameLabel, 0, 0);
-        GridPane.setConstraints(usernameInput, 1, 0);
-        GridPane.setConstraints(passwordLabel, 0, 1);
-        GridPane.setConstraints(passwordInput, 1, 1);
-        GridPane.setConstraints(phoneLabel, 0, 2);
-        GridPane.setConstraints(phoneInput, 1, 2);
-        GridPane.setConstraints(firstNameLabel, 0, 3);
-        GridPane.setConstraints(firstNameInput, 1, 3);
-        GridPane.setConstraints(lastNameLabel, 0, 4);
-        GridPane.setConstraints(lastNameInput, 1, 4);
-        GridPane.setConstraints(registerButton, 1, 5);
+
+        registerGrid.setStyle("-fx-background-color:white;");
+        usernameInput.setStyle("-fx-background-color: lightgray;");
+        passwordInput.setStyle("-fx-background-color: lightgray;");
+        phoneInput.setStyle("-fx-background-color: lightgray;");
+        firstNameInput.setStyle("-fx-background-color: lightgray;");
+        lastNameInput.setStyle("-fx-background-color: lightgray;");
+
+        ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(150);
+        GridPane.setHalignment(imageView, HPos.LEFT);
+        ImageView imageSistemas=new ImageView(new Image("co\\edu\\uptc\\util\\logo-sistemas.png"));
+        imageSistemas.setFitHeight(80);
+        imageSistemas.setFitWidth(80);
+        GridPane.setHalignment(imageSistemas, HPos.RIGHT);
+
+
+        GridPane.setConstraints(imageView, 0, 0);
+        GridPane.setConstraints(imageSistemas, 1, 0);
+        GridPane.setConstraints(usernameLabel, 0, 1);
+        GridPane.setConstraints(usernameInput, 1, 1);
+        GridPane.setConstraints(passwordLabel, 0, 2);
+        GridPane.setConstraints(passwordInput, 1, 2);
+        GridPane.setConstraints(phoneLabel, 0, 3);
+        GridPane.setConstraints(phoneInput, 1, 3);
+        GridPane.setConstraints(firstNameLabel, 0, 4);
+        GridPane.setConstraints(firstNameInput, 1, 4);
+        GridPane.setConstraints(lastNameLabel, 0, 5);
+        GridPane.setConstraints(lastNameInput, 1, 5);
+        GridPane.setConstraints(returnButton, 0, 6);
+        GridPane.setConstraints(registerButton, 1, 6);
+
+        GridPane.setHalignment(usernameLabel, HPos.CENTER);
+        GridPane.setHalignment(passwordLabel, HPos.CENTER);
+        GridPane.setHalignment(phoneLabel, HPos.CENTER);
+        GridPane.setHalignment(firstNameLabel, HPos.CENTER);
+        GridPane.setHalignment(lastNameLabel, HPos.CENTER);
+        GridPane.setHalignment(returnButton, HPos.CENTER); 
+        GridPane.setValignment(returnButton, VPos.CENTER);
+        GridPane.setHalignment(registerButton, HPos.CENTER); 
+        GridPane.setValignment(registerButton, VPos.CENTER); 
+
+        usernameLabel.setAlignment(Pos.CENTER_LEFT);
+        passwordLabel.setAlignment(Pos.CENTER_LEFT);
+        phoneLabel.setAlignment(Pos.CENTER_LEFT);
+        firstNameLabel.setAlignment(Pos.CENTER_LEFT);
+        lastNameLabel.setAlignment(Pos.CENTER_LEFT);
+
+
+        returnButton.setOnAction(e ->   primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
 
         registerButton.setOnAction(e -> {
             String username = usernameInput.getText().trim();
@@ -144,47 +203,79 @@ public class View extends Application {
 
             String FILE_PATH = "co\\edu\\uptc\\persistence\\Usuarios.json";
             boolean isExist=false;
-            try {
-                ArrayList<Model> cuentasEstudiantes = new ArrayList<>(JsonFile.readFromJson(FILE_PATH));
-                for(Model model:cuentasEstudiantes) {
-                    if (model.getUserName().equals(username)) {
-                        isExist=true;
-                    }
-                }
-                
-                if(!isExist) {
-                    if(isNumber)    {
-                        try {
-                            loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
-                            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
-                            primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-                        } catch (Exception ex) {
-                            showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+            if(usernameInput.getText().isEmpty() || phoneInput.getText().isEmpty() || firstNameInput.getText().isEmpty() || lastNameInput.getText().isEmpty())    {
+                showAlert(Alert.AlertType.ERROR, "Error","Campos incompletos, por favor, complete todos los campos requeridos");
+            }else{
+                try {
+                    ArrayList<Model> cuentasEstudiantes = new ArrayList<>(JsonFile.readFromJson(FILE_PATH));
+                    for(Model model:cuentasEstudiantes) {
+                        if (model.getUserName().equals(username)) {
+                            isExist=true;
                         }
-                    }else if(!isNumber)  {
-                        showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
-
                     }
-                   
-                }else if (isExist){
-                    showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
-                } else {
                     
+                    if(!isExist) {
+                        if(isNumber)    {
+                            try {
+                                loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
+                                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
+                                primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                            } catch (Exception ex) {
+                                showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                            }
+                        }else if(!isNumber)  {
+                            showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
+    
+                        }
+                       
+                    }else if (isExist){
+                        showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
+                    } else {
+                        
+                    }
+    
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
                 }
-
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
             }
+
+          
 
             
             
            
         });
 
-        registerGrid.getChildren().addAll(usernameLabel, usernameInput, passwordLabel, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput, registerButton);
+        registerGrid.getChildren().addAll(imageView,imageSistemas,usernameLabel, usernameInput, passwordLabel, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput,returnButton, registerButton);
+        
+        
 
-        primaryStage.setScene(new Scene(registerGrid, 400, 300));
+         HBox hBox = new HBox(registerGrid);
+    hBox.setAlignment(Pos.CENTER);
+   
+
+         VBox vbox = new VBox(hBox);
+    vbox.setAlignment(Pos.CENTER);  
+    vbox.setPadding(new Insets(20));
+
+        StackPane stackPane=new StackPane();
+        ImageView backgroundImage=new ImageView(new Image("co\\edu\\uptc\\util\\imagen.png"));
+        backgroundImage.setPreserveRatio(false); 
+        
+
+        //bagroundImage.setFitHeight(600);
+        //bagroundImage.setFitWidth(800);
+
+        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+        backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
+
+        stackPane.setCenterShape(true);
+        stackPane.getChildren().addAll(backgroundImage,vbox);
+        
+       
+
+        primaryStage.setScene(new Scene(stackPane, 800, 600));
     }
 
     private void showRecoverPasswordForm(Stage primaryStage) {
