@@ -11,6 +11,15 @@
         "c:\\javaFx\\lib\\javafx.media.jar",
         "c:\\javaFx\\lib\\javafx.swing.jar",
         "c:\\javaFx\\lib\\javafx.web.jar",
-        "c:\\javaFx\\lib\\javafx-swt.jar"
+        "c:\\javaFx\\lib\\javafx-swt.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\gson-2.10.1.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx.base.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx.controls.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx.fxml.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx.graphics.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx.media.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx.swing.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx.web.jar",
+        "c:\\Users\\Sergio Acero\\Documents\\openjfx-22.0.1_windows-x64_bin-sdk\\javafx-sdk-22.0.1\\lib\\javafx-swt.jar"
     ]
 }

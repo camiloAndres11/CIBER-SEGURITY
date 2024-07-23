@@ -16,5 +16,14 @@
     "telefono": "86353637",
     "nombre": "Andres",
     "apellido": "Torres"
+  },
+  {
+    "correoElectronico": "31212312312.######@uptc.edu.co",
+    "contraseña": "Andres12#",
+    "idInterno": "pepe5454",
+    "userName": "pepe",
+    "telefono": "312304461",
+    "nombre": "31212312312",
+    "apellido": "######"
   }
 ]
