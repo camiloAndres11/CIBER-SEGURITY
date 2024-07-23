@@ -124,6 +124,7 @@ public class View extends Application {
         registerButton.setOnAction(e -> {
             String username = usernameInput.getText().trim();
             String password = passwordInput.getText().trim();
+            //passwordInput.setTooltip("ddfd");
             String phone = phoneInput.getText().trim();
             String firstName = firstNameInput.getText().trim();
             String lastName = lastNameInput.getText().trim();
