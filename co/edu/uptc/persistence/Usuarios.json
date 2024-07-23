@@ -1,0 +1,20 @@
+[
+  {
+    "correoElectronico": "juan@uptc.edu.co",
+    "contraseña": "Andres1212*",
+    "idInterno": "2232girason",
+    "userName": "jorge12",
+    "telefono": "2332231",
+    "nombre": "juan",
+    "apellido": "girason"
+  },
+  {
+    "correoElectronico": "juan2@uptc.edu.co",
+    "contraseña": "Duvan4545*",
+    "idInterno": "9650perez",
+    "userName": "juansito",
+    "telefono": "3432224432",
+    "nombre": "juan",
+    "apellido": "perez"
+  }
+]
