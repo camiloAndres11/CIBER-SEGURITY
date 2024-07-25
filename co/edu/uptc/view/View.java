@@ -22,6 +22,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 
@@ -38,18 +40,23 @@ public class View extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Sistema de Gestión UPTC");
 
-        GridPane loginGrid = createLoginForm(primaryStage);
-        Scene loginScene = new Scene(loginGrid, 400, 300);
+        // Crea el StackPane para el formulario de inicio de sesión con imagen de fondo
+        StackPane root = createLoginForm(primaryStage);
 
+        // Crea una nueva escena y establece el StackPane como el contenido
+        Scene loginScene = new Scene(root, 800, 600);
+
+        // Establece la escena en el escenario y muestra el escenario
         primaryStage.setScene(loginScene);
         primaryStage.show();
     }
 
-    private GridPane createLoginForm(Stage primaryStage) {
+    private StackPane createLoginForm(Stage primaryStage) {
         GridPane loginGrid = new GridPane();
         loginGrid.setPadding(new Insets(10));
         loginGrid.setHgap(10);
-        loginGrid.setVgap(10);
+        loginGrid.setVgap(20);
+        loginGrid.setStyle("-fx-background-color:white;"); // Fondo  para el GridPane
 
         Label usernameLabel = new Label("Nombre de usuario:");
         TextField usernameInput = new TextField();
@@ -59,13 +66,42 @@ public class View extends Application {
         Button registerButton = new Button("Registrarse");
         Button recoverButton = new Button("Recuperar Contraseña");
 
-        GridPane.setConstraints(usernameLabel, 0, 0);
-        GridPane.setConstraints(usernameInput, 1, 0);
-        GridPane.setConstraints(passwordLabel, 0, 1);
-        GridPane.setConstraints(passwordInput, 1, 1);
-        GridPane.setConstraints(loginButton, 1, 2);
+        usernameLabel.setPrefWidth(150);
+        passwordLabel.setPrefWidth(150);
+        loginButton.setPrefWidth(150);
+        registerButton.setPrefWidth(150);
+        recoverButton.setPrefWidth(150);
+
+        usernameInput.setStyle("-fx-background-color: lightgray;");
+        passwordInput.setStyle("-fx-background-color: lightgray;");
+
+        ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(150);
+        GridPane.setHalignment(imageView, HPos.LEFT);
+        ImageView imageSistemas = new ImageView(new Image("co\\edu\\uptc\\util\\logo-sistemas.png"));
+        imageSistemas.setFitHeight(100);
+        imageSistemas.setFitWidth(100);
+        GridPane.setHalignment(imageSistemas, HPos.RIGHT);
+
+        GridPane.setConstraints(imageView, 0, 0);
+        GridPane.setConstraints(imageSistemas, 1, 0);
+        GridPane.setConstraints(usernameLabel, 0, 1);
+        GridPane.setConstraints(usernameInput, 1, 1);
+        GridPane.setConstraints(passwordLabel, 0, 2);
+        GridPane.setConstraints(passwordInput, 1, 2);
+        GridPane.setConstraints(loginButton, 0, 3);
         GridPane.setConstraints(registerButton, 1, 3);
         GridPane.setConstraints(recoverButton, 1, 4);
+
+        GridPane.setHalignment(usernameLabel, HPos.CENTER);
+        GridPane.setHalignment(passwordLabel, HPos.CENTER);
+        GridPane.setHalignment(loginButton, HPos.CENTER);
+        GridPane.setHalignment(registerButton, HPos.CENTER);
+        GridPane.setHalignment(recoverButton, HPos.CENTER);
+
+        usernameLabel.setAlignment(Pos.CENTER_LEFT);
+        passwordLabel.setAlignment(Pos.CENTER_LEFT);
 
         loginButton.setOnAction(e -> {
             String username = usernameInput.getText().trim();
@@ -80,9 +116,26 @@ public class View extends Application {
         registerButton.setOnAction(e -> showRegisterForm(primaryStage));
         recoverButton.setOnAction(e -> showRecoverPasswordForm(primaryStage));
 
-        loginGrid.getChildren().addAll(usernameLabel, usernameInput, passwordLabel, passwordInput, loginButton, registerButton, recoverButton);
+        loginGrid.getChildren().addAll(imageView, imageSistemas, usernameLabel, usernameInput, passwordLabel, passwordInput, loginButton, registerButton, recoverButton);
 
-        return loginGrid;
+        // Create el VBox en el centro  loginGrid in el  StackPane
+        VBox vbox = new VBox(loginGrid);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(40));
+
+        // Crea un  StackPane con la imagen de fondito
+        StackPane stackPane = new StackPane();
+        ImageView backgroundImage = new ImageView(new Image("co\\edu\\uptc\\util\\imagen.png"));
+        backgroundImage.setPreserveRatio(false);
+        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+        backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
+
+        stackPane.setCenterShape(true);
+        stackPane.getChildren().addAll(backgroundImage, vbox);
+
+
+
+        return stackPane;
     }
 
     private void showMainScreen(Stage primaryStage) {
@@ -97,11 +150,11 @@ public class View extends Application {
         GridPane.setConstraints(welcomeLabel, 0, 0);
         GridPane.setConstraints(logoutButton, 0, 1);
 
-        logoutButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
+        logoutButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 800, 600)));
 
         mainGrid.getChildren().addAll(welcomeLabel, logoutButton);
 
-        Scene mainScene = new Scene(mainGrid, 400, 300);
+        Scene mainScene = new Scene(mainGrid, 800, 600);
         primaryStage.setScene(mainScene);
     }
 
