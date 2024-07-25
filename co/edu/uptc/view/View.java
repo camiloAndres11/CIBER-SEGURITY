@@ -179,6 +179,7 @@ public class View extends Application {
         Button returnButton=new Button("Volver");
         Button registerButton = new Button("Registrar");
         
+        
         usernameLabel.setPrefWidth(150); 
         passwordLabel.setPrefWidth(150);
         phoneLabel.setPrefWidth(150);
@@ -505,6 +506,10 @@ public class View extends Application {
         Button returnButton = new Button("Volver");
         Button saveButton = new Button("Guardar");
     
+        // Label para mostrar los requisitos de la contraseña con fuente más pequeña
+        Label passwordRequirementsLabel = new Label("La contraseña debe contar con mínimo 8 caracteres, una mayúscula, 2 números y un carácter especial.");
+        passwordRequirementsLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;"); // Tamaño de fuente más pequeño y color gris
+    
         newPasswordLabel.setPrefWidth(150);
         confirmPasswordLabel.setPrefWidth(150);
         newPasswordInput.setStyle("-fx-background-color: lightgray;");
@@ -525,21 +530,24 @@ public class View extends Application {
         GridPane.setConstraints(imageSistemas, 1, 0);
         GridPane.setConstraints(newPasswordLabel, 0, 1);
         GridPane.setConstraints(newPasswordInput, 1, 1);
-        GridPane.setConstraints(confirmPasswordLabel, 0, 2);
-        GridPane.setConstraints(confirmPasswordInput, 1, 2);
-        GridPane.setConstraints(returnButton, 0, 3);
-        GridPane.setConstraints(saveButton, 1, 3);
+        GridPane.setConstraints(passwordRequirementsLabel, 0, 2, 2, 1); // Requiere 2 columnas de ancho
+        GridPane.setConstraints(confirmPasswordLabel, 0, 3);
+        GridPane.setConstraints(confirmPasswordInput, 1, 3);
+        
+        // Contenedor HBox para los botones
+        HBox buttonBox = new HBox(10, returnButton, saveButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        GridPane.setConstraints(buttonBox, 0, 4, 2, 1); // Requiere 2 columnas de ancho y se coloca en la fila 4
     
         passwordGrid.setStyle("-fx-background-color:white;");
         GridPane.setHalignment(newPasswordLabel, HPos.CENTER);
         GridPane.setHalignment(confirmPasswordLabel, HPos.CENTER);
-        GridPane.setHalignment(returnButton, HPos.CENTER);
-        GridPane.setValignment(returnButton, VPos.CENTER);
-        GridPane.setHalignment(saveButton, HPos.CENTER);
-        GridPane.setValignment(saveButton, VPos.CENTER);
+        GridPane.setHalignment(passwordRequirementsLabel, HPos.CENTER);
+        GridPane.setHalignment(buttonBox, HPos.CENTER);
     
         newPasswordLabel.setAlignment(Pos.CENTER_LEFT);
         confirmPasswordLabel.setAlignment(Pos.CENTER_LEFT);
+        passwordRequirementsLabel.setAlignment(Pos.CENTER);
     
         returnButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
     
@@ -564,7 +572,7 @@ public class View extends Application {
             }
         });
     
-        passwordGrid.getChildren().addAll(imageView, imageSistemas, newPasswordLabel, newPasswordInput, confirmPasswordLabel, confirmPasswordInput, returnButton, saveButton);
+        passwordGrid.getChildren().addAll(imageView, imageSistemas, newPasswordLabel, newPasswordInput, passwordRequirementsLabel, confirmPasswordLabel, confirmPasswordInput, buttonBox);
     
         HBox hBox = new HBox(passwordGrid);
         hBox.setAlignment(Pos.CENTER);
@@ -583,7 +591,9 @@ public class View extends Application {
         stackPane.getChildren().addAll(backgroundImage, vbox);
     
         primaryStage.setScene(new Scene(stackPane, 800, 600));
-    }   
+    }
+    
+    
 
     private void mostrarCodigoVerificacion(int verificationCode) {
         Stage codeStage = new Stage();
