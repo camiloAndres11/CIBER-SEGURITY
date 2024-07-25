@@ -31,7 +31,7 @@ public class Controller {
         if (!contraseña.matches(".*[A-Z].*")) {
             return false;
         }
-        Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+        Pattern pattern = Pattern.compile("[^a-zA-Z0-10]");
         Matcher matcher = pattern.matcher(contraseña);
         if (!matcher.find()) {
             return false;
@@ -71,6 +71,61 @@ public class Controller {
         }
         return false;
     }
+
+    public boolean validarNombres(String firstName, String lastName) {
+        if(firstName.matches("[a-zA-Z]+") && lastName.matches("[a-zA-Z]+"))  {
+               return true;
+        }
+        return false;
+    }
+
+    public String crearCorreo(String correoIngresado) throws IOException  {
+
+        String[] correo=correoIngresado.split("@");
+        String primeraParte=correo[0];
+        int numero=0;
+        String valorNuevoCorreo =correoIngresado;
+        ArrayList<Model> cuentasEstudiantes = new ArrayList<>(JsonFile.readFromJson(FILE_PATH));
+        for(Model model:cuentasEstudiantes) {
+            String correoExistente=model.getCorreoElectronico();
+            String [] valor=correoExistente.split("@");
+            String correoExistenteString=valor[0];
+            Pattern patternString=Pattern.compile("([a-zA-Z]+)\\d*");
+            Matcher matcherString=patternString.matcher(correoExistenteString);
+            String stringCorreo=null;
+            if(matcherString.find())    {
+                 stringCorreo=matcherString.group(1);
+            }
+
+            Pattern patternStringIngreso=Pattern.compile("([a-zA-Z]+)\\d*");
+            Matcher matcherStringIngreso=patternStringIngreso.matcher(valorNuevoCorreo);
+            String stringCorreoIngreso=null;
+            if(matcherStringIngreso.find())    {
+                 stringCorreoIngreso=matcherStringIngreso.group(1);
+            }
+           
+            if (stringCorreoIngreso.equals(stringCorreo)) {
+                Pattern pattern=Pattern.compile("\\d+");
+                Matcher matcher=pattern.matcher(correoExistenteString);
+                if(matcher.find())  {
+                    String num=matcher.group();
+                    numero=Integer.parseInt(num) + 1;
+
+                   valorNuevoCorreo= primeraParte + numero + "@uptc.edu.co";
+                }else   {
+                    valorNuevoCorreo=primeraParte + "1" + "@uptc.edu.co";
+                }
+            }else   {
+            valorNuevoCorreo=correoIngresado;
+            }
+
+        }
+
+
+        return valorNuevoCorreo;
+        
+    }
+    
 
     public void actualizarContraseña(String email, String nuevaContraseña) {
         for (Model model : cuentasEstudiantes) {

@@ -104,6 +104,7 @@ public class View extends Application {
         primaryStage.setScene(mainScene);
     }
 
+
     private void showRegisterForm(Stage primaryStage) {
         GridPane registerGrid = new GridPane();
         registerGrid.setPadding(new Insets(10));
@@ -192,6 +193,13 @@ public class View extends Application {
             String email=firstName.toLowerCase() +"." + lastName.toLowerCase() + "@uptc.edu.co";
             int number= (int) (1000 + Math.random() * 9000);
             String idInterno=username + number;
+            String emailString=null;
+            try {
+                 emailString=loginController.crearCorreo(email);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
 
             boolean isNumber=true;
 
@@ -213,26 +221,31 @@ public class View extends Application {
                             isExist=true;
                         }
                     }
-                    
-                    if(!isExist) {
-                        if(isNumber)    {
-                            try {
-                                loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
-                                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
-                                primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-                            } catch (Exception ex) {
-                                showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
-                            }
-                        }else if(!isNumber)  {
-                            showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
-    
-                        }
-                       
-                    }else if (isExist){
-                        showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
-                    } else {
+                    if(loginController.validarNombres(firstName,lastName))  {
                         
+                        if(!isExist) {
+                            if(isNumber)    {
+                                try {
+                                    loginController.registrarUsuario(emailString,idInterno, username,password,phone,firstName,lastName);
+                                    showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
+                                    primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                                } catch (Exception ex) {
+                                    showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                                }
+                            }else if(!isNumber)  {
+                                showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
+        
+                            }
+                           
+                        }else if (isExist){
+                            showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
+                        }
+                    }else {
+                        showAlert(Alert.AlertType.ERROR, "Error","Nombre o Apellido invalido");
+                       
                     }
+                    
+                     
     
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
@@ -372,9 +385,5 @@ public class View extends Application {
         alert.showAndWait();
     }
 
-    public void MenuPrincipal() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'MenuPrincipal'");
-    
-    }
+   
 }

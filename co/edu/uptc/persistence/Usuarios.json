@@ -18,12 +18,21 @@
     "apellido": "Torres"
   },
   {
-    "correoElectronico": "31212312312.######@uptc.edu.co",
-    "contraseña": "Andres12#",
-    "idInterno": "pepe5454",
-    "userName": "pepe",
-    "telefono": "312304461",
-    "nombre": "31212312312",
-    "apellido": "######"
+    "correoElectronico": "jorge.ruiz@uptc.edu.co",
+    "contraseña": "Jorge453#",
+    "idInterno": "Jorge8912",
+    "userName": "Jorge",
+    "telefono": "324562578",
+    "nombre": "Jorge",
+    "apellido": "Ruiz"
+  },
+  {
+    "correoElectronico": "jorge.ruiz1@uptc.edu.co",
+    "contraseña": "Jorge45#",
+    "idInterno": "Jorge249197",
+    "userName": "Jorge24",
+    "telefono": "345273638",
+    "nombre": "Jorge",
+    "apellido": "Ruiz"
   }
 ]
