@@ -8,6 +8,7 @@ import co.edu.uptc.controller.Controller;
 import co.edu.uptc.controller.JsonFile;
 import co.edu.uptc.model.Model;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -283,85 +284,281 @@ public class View extends Application {
         recoverGrid.setPadding(new Insets(10));
         recoverGrid.setHgap(10);
         recoverGrid.setVgap(10);
-
+    
+        Label instructionLabel = new Label("Escriba su correo en el siguiente espacio para enviar un código para reestablecer su contraseña:");
         Label emailLabel = new Label("Correo electrónico:");
         TextField emailInput = new TextField();
         Button recoverButton = new Button("Recuperar");
-
-        GridPane.setConstraints(emailLabel, 0, 0);
-        GridPane.setConstraints(emailInput, 1, 0);
-        GridPane.setConstraints(recoverButton, 1, 1);
-
+        Button returnButton = new Button("Volver");
+    
+        instructionLabel.setWrapText(true);
+        instructionLabel.setPrefWidth(300);
+        emailLabel.setPrefWidth(150);
+        emailInput.setStyle("-fx-background-color: lightgray;");
+        returnButton.setPrefWidth(150);
+        recoverButton.setPrefWidth(150);
+    
+        ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(150);
+        GridPane.setHalignment(imageView, HPos.LEFT);
+        ImageView imageSistemas = new ImageView(new Image("co\\edu\\uptc\\util\\logo-sistemas.png"));
+        imageSistemas.setFitHeight(80);
+        imageSistemas.setFitWidth(80);
+        GridPane.setHalignment(imageSistemas, HPos.RIGHT);
+    
+        GridPane.setConstraints(imageView, 0, 0);
+        GridPane.setConstraints(imageSistemas, 1, 0);
+        GridPane.setConstraints(instructionLabel, 0, 1, 2, 1);
+        GridPane.setConstraints(emailLabel, 0, 2);
+        GridPane.setConstraints(emailInput, 1, 2);
+        GridPane.setConstraints(returnButton, 0, 3);
+        GridPane.setConstraints(recoverButton, 1, 3);
+    
+        recoverGrid.setStyle("-fx-background-color:white;");
+        GridPane.setHalignment(instructionLabel, HPos.CENTER);
+        GridPane.setHalignment(emailLabel, HPos.CENTER);
+        GridPane.setHalignment(returnButton, HPos.CENTER);
+        GridPane.setValignment(returnButton, VPos.CENTER);
+        GridPane.setHalignment(recoverButton, HPos.CENTER);
+        GridPane.setValignment(recoverButton, VPos.CENTER);
+    
+        instructionLabel.setAlignment(Pos.CENTER_LEFT);
+        emailLabel.setAlignment(Pos.CENTER_LEFT);
+    
+        returnButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
+    
         recoverButton.setOnAction(e -> {
             String email = emailInput.getText().trim();
-            if (loginController.verificarCorreoExistente(email)) {
+            if (email.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El campo de correo electrónico no puede estar vacío.");
+            } else if (loginController.verificarCorreoExistente(email)) {
                 int verificationCode = generarCodigoVerificacion();
-                System.out.println("Código de verificación: " + verificationCode); // Para pruebas, debería enviarse por correo
-
-                TextInputDialog codeDialog = new TextInputDialog();
-                codeDialog.setTitle("Código de verificación");
-                codeDialog.setHeaderText("Se ha enviado un código de verificación a su correo.");
-                codeDialog.setContentText("Ingrese el código:");
-
-                codeDialog.showAndWait().ifPresent(code -> {
-                    if (Integer.parseInt(code) == verificationCode) {
-                        Dialog<ButtonType> passwordDialog = new Dialog<>();
-                        passwordDialog.setTitle("Nueva contraseña");
-
-                        GridPane passwordGrid = new GridPane();
-                        passwordGrid.setPadding(new Insets(10));
-                        passwordGrid.setHgap(10);
-                        passwordGrid.setVgap(10);
-
-                        Label newPasswordLabel = new Label("Nueva contraseña:");
-                        PasswordField newPasswordInput = new PasswordField();
-                        Label confirmPasswordLabel = new Label("Confirmar contraseña:");
-                        PasswordField confirmPasswordInput = new PasswordField();
-
-                        GridPane.setConstraints(newPasswordLabel, 0, 0);
-                        GridPane.setConstraints(newPasswordInput, 1, 0);
-                        GridPane.setConstraints(confirmPasswordLabel, 0, 1);
-                        GridPane.setConstraints(confirmPasswordInput, 1, 1);
-
-                        passwordGrid.getChildren().addAll(newPasswordLabel, newPasswordInput, confirmPasswordLabel, confirmPasswordInput);
-
-                        passwordDialog.getDialogPane().setContent(passwordGrid);
-                        passwordDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-                        passwordDialog.showAndWait().ifPresent(result -> {
-                            if (result == ButtonType.OK) {
-                                String newPassword = newPasswordInput.getText().trim();
-                                String confirmPassword = confirmPasswordInput.getText().trim();
-
-                                if (newPassword.equals(confirmPassword) && loginController.verificarContraseña(newPassword)) {
-                                    try {
-                                        loginController.actualizarContraseña(email, newPassword);
-                                        showAlert(Alert.AlertType.INFORMATION, "Éxito", "Contraseña cambiada exitosamente.");
-                                        primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-                                    } catch (Exception ex) {
-                                        showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
-                                    }
-                                } else {
-                                    showAlert(Alert.AlertType.ERROR, "Error", "Las contraseñas no coinciden o no cumplen los requisitos.");
-                                }
-                            }
-                        });
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Error", "Código de verificación incorrecto.");
-                    }
-                });
+                mostrarCodigoVerificacion(verificationCode);
+                showVerificationCodeForm(primaryStage, email, verificationCode);
             } else {
                 showAlert(Alert.AlertType.ERROR, "Error", "Correo electrónico no encontrado.");
             }
         });
+    
+        recoverGrid.getChildren().addAll(imageView, imageSistemas, instructionLabel, emailLabel, emailInput, returnButton, recoverButton);
+    
+        HBox hBox = new HBox(recoverGrid);
+        hBox.setAlignment(Pos.CENTER);
+    
+        VBox vbox = new VBox(hBox);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+    
+        StackPane stackPane = new StackPane();
+        ImageView backgroundImage = new ImageView(new Image("co\\edu\\uptc\\util\\imagen.png"));
+        backgroundImage.setPreserveRatio(false);
+        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+        backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
+    
+        stackPane.setCenterShape(true);
+        stackPane.getChildren().addAll(backgroundImage, vbox);
+    
+        primaryStage.setScene(new Scene(stackPane, 800, 600));
+    }
+    
+    private void showVerificationCodeForm(Stage primaryStage, String email, int verificationCode) {
+        GridPane codeGrid = new GridPane();
+        codeGrid.setPadding(new Insets(10));
+        codeGrid.setHgap(10);
+        codeGrid.setVgap(10);
+    
+        Label codeLabel = new Label("Código de verificación:");
+        TextField codeInput = new TextField();
+        Button verifyButton = new Button("Verificar");
+        Button returnButton = new Button("Volver");
+    
+        codeLabel.setPrefWidth(150);
+        codeInput.setStyle("-fx-background-color: lightgray;");
+        returnButton.setPrefWidth(150);
+        verifyButton.setPrefWidth(150);
+    
+        ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(150);
+        GridPane.setHalignment(imageView, HPos.LEFT);
+        ImageView imageSistemas = new ImageView(new Image("co\\edu\\uptc\\util\\logo-sistemas.png"));
+        imageSistemas.setFitHeight(80);
+        imageSistemas.setFitWidth(80);
+        GridPane.setHalignment(imageSistemas, HPos.RIGHT);
+    
+        GridPane.setConstraints(imageView, 0, 0);
+        GridPane.setConstraints(imageSistemas, 1, 0);
+        GridPane.setConstraints(codeLabel, 0, 1);
+        GridPane.setConstraints(codeInput, 1, 1);
+        GridPane.setConstraints(returnButton, 0, 2);
+        GridPane.setConstraints(verifyButton, 1, 2);
+    
+        codeGrid.setStyle("-fx-background-color:white;");
+        GridPane.setHalignment(codeLabel, HPos.CENTER);
+        GridPane.setHalignment(returnButton, HPos.CENTER);
+        GridPane.setValignment(returnButton, VPos.CENTER);
+        GridPane.setHalignment(verifyButton, HPos.CENTER);
+        GridPane.setValignment(verifyButton, VPos.CENTER);
+    
+        codeLabel.setAlignment(Pos.CENTER_LEFT);
+    
+        returnButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
+    
+        verifyButton.setOnAction(ev -> {
+            String enteredCode = codeInput.getText().trim();
+            if (enteredCode.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El campo del código de verificación no puede estar vacío.");
+            } else if (Integer.parseInt(enteredCode) == verificationCode) {
+                showNewPasswordForm(primaryStage, email);
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Código de verificación incorrecto.");
+            }
+        });
+    
+        codeGrid.getChildren().addAll(imageView, imageSistemas, codeLabel, codeInput, returnButton, verifyButton);
+    
+        HBox hBox = new HBox(codeGrid);
+        hBox.setAlignment(Pos.CENTER);
+    
+        VBox vbox = new VBox(hBox);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+    
+        StackPane stackPane = new StackPane();
+        ImageView backgroundImage = new ImageView(new Image("co\\edu\\uptc\\util\\imagen.png"));
+        backgroundImage.setPreserveRatio(false);
+        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+        backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
+    
+        stackPane.setCenterShape(true);
+        stackPane.getChildren().addAll(backgroundImage, vbox);
+    
+        primaryStage.setScene(new Scene(stackPane, 800, 600));
+    }
+    
+    private void showNewPasswordForm(Stage primaryStage, String email) {
+        GridPane passwordGrid = new GridPane();
+        passwordGrid.setPadding(new Insets(10));
+        passwordGrid.setHgap(10);
+        passwordGrid.setVgap(10);
+    
+        Label newPasswordLabel = new Label("Nueva contraseña:");
+        PasswordField newPasswordInput = new PasswordField();
+        Label confirmPasswordLabel = new Label("Confirmar contraseña:");
+        PasswordField confirmPasswordInput = new PasswordField();
+        Button returnButton = new Button("Volver");
+        Button saveButton = new Button("Guardar");
+    
+        newPasswordLabel.setPrefWidth(150);
+        confirmPasswordLabel.setPrefWidth(150);
+        newPasswordInput.setStyle("-fx-background-color: lightgray;");
+        confirmPasswordInput.setStyle("-fx-background-color: lightgray;");
+        returnButton.setPrefWidth(150);
+        saveButton.setPrefWidth(150);
+    
+        ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
+        imageView.setFitHeight(80);
+        imageView.setFitWidth(150);
+        GridPane.setHalignment(imageView, HPos.LEFT);
+        ImageView imageSistemas = new ImageView(new Image("co\\edu\\uptc\\util\\logo-sistemas.png"));
+        imageSistemas.setFitHeight(80);
+        imageSistemas.setFitWidth(80);
+        GridPane.setHalignment(imageSistemas, HPos.RIGHT);
+    
+        GridPane.setConstraints(imageView, 0, 0);
+        GridPane.setConstraints(imageSistemas, 1, 0);
+        GridPane.setConstraints(newPasswordLabel, 0, 1);
+        GridPane.setConstraints(newPasswordInput, 1, 1);
+        GridPane.setConstraints(confirmPasswordLabel, 0, 2);
+        GridPane.setConstraints(confirmPasswordInput, 1, 2);
+        GridPane.setConstraints(returnButton, 0, 3);
+        GridPane.setConstraints(saveButton, 1, 3);
+    
+        passwordGrid.setStyle("-fx-background-color:white;");
+        GridPane.setHalignment(newPasswordLabel, HPos.CENTER);
+        GridPane.setHalignment(confirmPasswordLabel, HPos.CENTER);
+        GridPane.setHalignment(returnButton, HPos.CENTER);
+        GridPane.setValignment(returnButton, VPos.CENTER);
+        GridPane.setHalignment(saveButton, HPos.CENTER);
+        GridPane.setValignment(saveButton, VPos.CENTER);
+    
+        newPasswordLabel.setAlignment(Pos.CENTER_LEFT);
+        confirmPasswordLabel.setAlignment(Pos.CENTER_LEFT);
+    
+        returnButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
+    
+        saveButton.setOnAction(e -> {
+            String newPassword = newPasswordInput.getText().trim();
+            String confirmPassword = confirmPasswordInput.getText().trim();
+    
+            if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Los campos de contraseña no pueden estar vacíos.");
+            } else if (!newPassword.equals(confirmPassword)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Las contraseñas no coinciden.");
+            } else if (!loginController.verificarContraseña(newPassword)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "La nueva contraseña no cumple los requisitos.");
+            } else {
+                try {
+                    loginController.actualizarContraseña(email, newPassword);
+                    showAlert(Alert.AlertType.INFORMATION, "Éxito", "Contraseña cambiada exitosamente.");
+                    primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                } catch (Exception ex) {
+                    showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                }
+            }
+        });
+    
+        passwordGrid.getChildren().addAll(imageView, imageSistemas, newPasswordLabel, newPasswordInput, confirmPasswordLabel, confirmPasswordInput, returnButton, saveButton);
+    
+        HBox hBox = new HBox(passwordGrid);
+        hBox.setAlignment(Pos.CENTER);
+    
+        VBox vbox = new VBox(hBox);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setPadding(new Insets(20));
+    
+        StackPane stackPane = new StackPane();
+        ImageView backgroundImage = new ImageView(new Image("co\\edu\\uptc\\util\\imagen.png"));
+        backgroundImage.setPreserveRatio(false);
+        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+        backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
+    
+        stackPane.setCenterShape(true);
+        stackPane.getChildren().addAll(backgroundImage, vbox);
+    
+        primaryStage.setScene(new Scene(stackPane, 800, 600));
+    }   
 
-        recoverGrid.getChildren().addAll(emailLabel, emailInput, recoverButton);
+    private void mostrarCodigoVerificacion(int verificationCode) {
+        Stage codeStage = new Stage();
+        codeStage.setTitle("Código de Verificación");
 
-        primaryStage.setScene(new Scene(recoverGrid, 400, 300));
+        GridPane codeGrid = new GridPane();
+        codeGrid.setPadding(new Insets(10));
+        codeGrid.setHgap(10);
+        codeGrid.setVgap(10);
+
+        Label codeLabel = new Label("Tu código de verificación es:");
+        Label codeValue = new Label(String.valueOf(verificationCode));
+        Button closeButton = new Button("Cerrar");
+
+        GridPane.setConstraints(codeLabel, 0, 0);
+        GridPane.setConstraints(codeValue, 1, 0);
+        GridPane.setConstraints(closeButton, 1, 1);
+
+        closeButton.setOnAction(e -> codeStage.close());
+
+        codeGrid.getChildren().addAll(codeLabel, codeValue, closeButton);
+
+        Scene codeScene = new Scene(codeGrid, 300, 200);
+        codeStage.setScene(codeScene);
+        codeStage.show();
     }
 
     private int generarCodigoVerificacion() {
-        return (int) (1000 + Math.random() * 9000);
+        // Genera un código de verificación aleatorio de 6 dígitos
+        return (int) (Math.random() * 900000) + 100000;
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
