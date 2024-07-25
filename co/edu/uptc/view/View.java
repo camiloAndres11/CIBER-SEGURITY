@@ -170,6 +170,7 @@ public class View extends Application {
         TextField usernameInput = new TextField();
         Label passwordLabel = new Label("Contraseña:");
         PasswordField passwordInput = new PasswordField();
+        Label explanationPassword=new Label("Debe tener al menos 8 caracteres, incluir una letra mayúscula, dos números y un carácter especial.");
         Label phoneLabel = new Label("Número de teléfono:");
         TextField phoneInput = new TextField();
         Label firstNameLabel = new Label("Nombre:");
@@ -179,16 +180,17 @@ public class View extends Application {
         Button returnButton=new Button("Volver");
         Button registerButton = new Button("Registrar");
         
-        
+        explanationPassword.setWrapText(true);
         usernameLabel.setPrefWidth(150); 
         passwordLabel.setPrefWidth(150);
+        explanationPassword.setPrefWidth(150);
         phoneLabel.setPrefWidth(150);
         firstNameLabel.setPrefWidth(150);
         lastNameLabel.setPrefWidth(150);
         returnButton.setPrefWidth(150);
         registerButton.setPrefWidth(150);
 
-
+        explanationPassword.setStyle("-fx-font-size: 7px;");
         registerGrid.setStyle("-fx-background-color:white;");
         usernameInput.setStyle("-fx-background-color: lightgray;");
         passwordInput.setStyle("-fx-background-color: lightgray;");
@@ -249,6 +251,13 @@ public class View extends Application {
             String email=firstName.toLowerCase() +"." + lastName.toLowerCase() + "@uptc.edu.co";
             int number= (int) (1000 + Math.random() * 9000);
             String idInterno=username + number;
+            String emailString=null;
+            try {
+                 emailString=loginController.crearCorreo(email);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
 
             boolean isNumber=true;
 
@@ -270,26 +279,31 @@ public class View extends Application {
                             isExist=true;
                         }
                     }
-                    
-                    if(!isExist) {
-                        if(isNumber)    {
-                            try {
-                                loginController.registrarUsuario(email,idInterno, username,password,phone,firstName,lastName);
-                                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
-                                primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-                            } catch (Exception ex) {
-                                showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
-                            }
-                        }else if(!isNumber)  {
-                            showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
-    
-                        }
-                       
-                    }else if (isExist){
-                        showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
-                    } else {
+                    if(loginController.validarNombres(firstName,lastName))  {
                         
+                        if(!isExist) {
+                            if(isNumber)    {
+                                try {
+                                    loginController.registrarUsuario(emailString,idInterno, username,password,phone,firstName,lastName);
+                                    showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
+                                    primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                                } catch (Exception ex) {
+                                    showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                                }
+                            }else if(!isNumber)  {
+                                showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
+        
+                            }
+                           
+                        }else if (isExist){
+                            showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
+                        }
+                    }else {
+                        showAlert(Alert.AlertType.ERROR, "Error","Nombre o Apellido invalido");
+                       
                     }
+                    
+                     
     
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block

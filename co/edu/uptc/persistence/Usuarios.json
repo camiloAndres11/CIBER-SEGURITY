@@ -18,15 +18,6 @@
     "apellido": "Torres"
   },
   {
-    "correoElectronico": "31212312312.######@uptc.edu.co",
-    "contraseña": "Andres12#",
-    "idInterno": "pepe5454",
-    "userName": "pepe",
-    "telefono": "312304461",
-    "nombre": "31212312312",
-    "apellido": "######"
-  },
-  {
     "correoElectronico": "duvan.perez@uptc.edu.co",
     "contraseña": "Duvan21_",
     "idInterno": "Duvan217205",
@@ -36,12 +27,39 @@
     "apellido": "Perez"
   },
   {
-    "correoElectronico": "pirlo.zaneti@uptc.edu.co",
-    "contraseña": "Camilo2121*",
-    "idInterno": "ANDREA9697",
-    "userName": "ANDREA",
-    "telefono": "33233232",
-    "nombre": "Pirlo",
-    "apellido": "zaneti"
+    "correoElectronico": "jorge.ulloa@uptc.edu.co",
+    "contraseña": "Jorgetr564#",
+    "idInterno": "Jotrge9540",
+    "userName": "Jotrge",
+    "telefono": "1234567899",
+    "nombre": "Jorge",
+    "apellido": "Ulloa"
+  },
+  {
+    "correoElectronico": "andres.torres1@uptc.edu.co",
+    "contraseña": "Andrew45#",
+    "idInterno": "Andrew8718",
+    "userName": "Andrew",
+    "telefono": "1234567899",
+    "nombre": "Andres",
+    "apellido": "Torres"
+  },
+  {
+    "correoElectronico": "jorge.ulloa1@uptc.edu.co",
+    "contraseña": "Ulloa435#",
+    "idInterno": "Jorget4830",
+    "userName": "Jorget",
+    "telefono": "1235764355",
+    "nombre": "jorge",
+    "apellido": "ulloa"
+  },
+  {
+    "correoElectronico": "andres.torres2@uptc.edu.co",
+    "contraseña": "Andtehdgd64545#",
+    "idInterno": "ANDRES344446",
+    "userName": "ANDRES34",
+    "telefono": "1234567898",
+    "nombre": "Andres",
+    "apellido": "Torres"
   }
 ]
