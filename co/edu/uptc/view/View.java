@@ -119,9 +119,11 @@ public class View extends Application {
         loginGrid.getChildren().addAll(imageView, imageSistemas, usernameLabel, usernameInput, passwordLabel, passwordInput, loginButton, registerButton, recoverButton);
 
         // Create el VBox en el centro  loginGrid in el  StackPane
-        VBox vbox = new VBox(loginGrid);
+        HBox hBox = new HBox(loginGrid);
+        hBox.setAlignment(Pos.CENTER);
+        VBox vbox = new VBox(hBox);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(40));
+        vbox.setPadding(new Insets(20));
 
         // Crea un  StackPane con la imagen de fondito
         StackPane stackPane = new StackPane();
