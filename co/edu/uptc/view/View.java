@@ -171,6 +171,8 @@ public class View extends Application {
         Label passwordLabel = new Label("Contraseña:");
         PasswordField passwordInput = new PasswordField();
         Label explanationPassword=new Label("Debe tener al menos 8 caracteres, incluir una letra mayúscula, dos números y un carácter especial.");
+        Label comfirmPaswordLabel=new Label("Confirmar contraseña");
+        PasswordField comfirmPassword=new PasswordField();
         Label phoneLabel = new Label("Número de teléfono:");
         TextField phoneInput = new TextField();
         Label firstNameLabel = new Label("Nombre:");
@@ -183,20 +185,21 @@ public class View extends Application {
         explanationPassword.setWrapText(true);
         usernameLabel.setPrefWidth(150); 
         passwordLabel.setPrefWidth(150);
-        explanationPassword.setPrefWidth(150);
+        explanationPassword.setPrefWidth(300);
         phoneLabel.setPrefWidth(150);
         firstNameLabel.setPrefWidth(150);
         lastNameLabel.setPrefWidth(150);
         returnButton.setPrefWidth(150);
         registerButton.setPrefWidth(150);
 
-        explanationPassword.setStyle("-fx-font-size: 7px;");
+        explanationPassword.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;");
         registerGrid.setStyle("-fx-background-color:white;");
         usernameInput.setStyle("-fx-background-color: lightgray;");
         passwordInput.setStyle("-fx-background-color: lightgray;");
         phoneInput.setStyle("-fx-background-color: lightgray;");
         firstNameInput.setStyle("-fx-background-color: lightgray;");
         lastNameInput.setStyle("-fx-background-color: lightgray;");
+        comfirmPassword.setStyle("-fx-background-color: lightgray;");
 
         ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
         imageView.setFitHeight(80);
@@ -214,14 +217,17 @@ public class View extends Application {
         GridPane.setConstraints(usernameInput, 1, 1);
         GridPane.setConstraints(passwordLabel, 0, 2);
         GridPane.setConstraints(passwordInput, 1, 2);
-        GridPane.setConstraints(phoneLabel, 0, 3);
-        GridPane.setConstraints(phoneInput, 1, 3);
-        GridPane.setConstraints(firstNameLabel, 0, 4);
-        GridPane.setConstraints(firstNameInput, 1, 4);
-        GridPane.setConstraints(lastNameLabel, 0, 5);
-        GridPane.setConstraints(lastNameInput, 1, 5);
-        GridPane.setConstraints(returnButton, 0, 6);
-        GridPane.setConstraints(registerButton, 1, 6);
+        GridPane.setConstraints(comfirmPaswordLabel,0,3);
+        GridPane.setConstraints(comfirmPassword,1,3);
+        GridPane.setConstraints(explanationPassword,0,4,4,1);
+        GridPane.setConstraints(phoneLabel, 0, 5);
+        GridPane.setConstraints(phoneInput, 1, 5);
+        GridPane.setConstraints(firstNameLabel, 0, 6);
+        GridPane.setConstraints(firstNameInput, 1, 6);
+        GridPane.setConstraints(lastNameLabel, 0, 7);
+        GridPane.setConstraints(lastNameInput, 1, 7);
+        GridPane.setConstraints(returnButton, 0, 8);
+        GridPane.setConstraints(registerButton, 1, 8);
 
         GridPane.setHalignment(usernameLabel, HPos.CENTER);
         GridPane.setHalignment(passwordLabel, HPos.CENTER);
@@ -238,13 +244,15 @@ public class View extends Application {
         phoneLabel.setAlignment(Pos.CENTER_LEFT);
         firstNameLabel.setAlignment(Pos.CENTER_LEFT);
         lastNameLabel.setAlignment(Pos.CENTER_LEFT);
-
+        //GridPane.setHalignment(explanationPassword, HPos.CENTER);
+        explanationPassword.setAlignment(Pos.CENTER_LEFT);
 
         returnButton.setOnAction(e ->   primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
 
         registerButton.setOnAction(e -> {
             String username = usernameInput.getText().trim();
             String password = passwordInput.getText().trim();
+            String passwordComfirm=comfirmPassword.getText().trim();
             String phone = phoneInput.getText().trim();
             String firstName = firstNameInput.getText().trim();
             String lastName = lastNameInput.getText().trim();
@@ -252,6 +260,8 @@ public class View extends Application {
             int number= (int) (1000 + Math.random() * 9000);
             String idInterno=username + number;
             String emailString=null;
+            int contar=0;
+            
             try {
                  emailString=loginController.crearCorreo(email);
             } catch (IOException e1) {
@@ -279,29 +289,51 @@ public class View extends Application {
                             isExist=true;
                         }
                     }
-                    if(loginController.validarNombres(firstName,lastName))  {
-                        
-                        if(!isExist) {
-                            if(isNumber)    {
-                                try {
-                                    loginController.registrarUsuario(emailString,idInterno, username,password,phone,firstName,lastName);
-                                    showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
-                                    primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-                                } catch (Exception ex) {
-                                    showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
-                                }
-                            }else if(!isNumber)  {
-                                showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
-        
-                            }
-                           
-                        }else if (isExist){
-                            showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
-                        }
-                    }else {
-                        showAlert(Alert.AlertType.ERROR, "Error","Nombre o Apellido invalido");
+
+                    if(password.equals(passwordComfirm))    {
                        
+                        if(loginController.validarNombres(firstName,lastName))  {
+                        
+                            if(!isExist) {
+
+                                for(int i=0;i<phone.length();i++){
+                                    contar=contar + 1;
+                    
+                                }
+
+                                if (contar==10){
+                                    if(isNumber )    {
+                                        try {
+                                            loginController.registrarUsuario(emailString,idInterno, username,password,phone,firstName,lastName);
+                                            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
+                                            primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                                        } catch (Exception ex) {
+                                            showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                                        }
+                                    }else if(!isNumber)  {
+                                        showAlert(Alert.AlertType.ERROR, "Error"," Numero de Telefono Invalido");
+                
+                                    }
+                                } else if (contar<10 || contar>10){
+                                    showAlert(Alert.AlertType.ERROR, "Error","El numero de telefono debe tener 10 caracteres");
+                                    
+                                }
+                                
+                               
+                            }else if (isExist){
+                                showAlert(Alert.AlertType.ERROR, "Error","Nombre de usuario ya existente");
+                            }
+                        }else {
+                            showAlert(Alert.AlertType.ERROR, "Error","Nombre o Apellido invalido");
+                           
+                        }
+
+                    }else   {
+                        showAlert(Alert.AlertType.ERROR, "Error","Las contraseñas no coinciden");
                     }
+
+
+                  
                     
                      
     
@@ -318,7 +350,7 @@ public class View extends Application {
            
         });
 
-        registerGrid.getChildren().addAll(imageView,imageSistemas,usernameLabel, usernameInput, passwordLabel, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput,returnButton, registerButton);
+        registerGrid.getChildren().addAll(imageView,imageSistemas,usernameLabel, usernameInput, passwordLabel,explanationPassword,comfirmPaswordLabel, comfirmPassword, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput,returnButton, registerButton);
         
         
 
@@ -524,6 +556,8 @@ public class View extends Application {
         Label passwordRequirementsLabel = new Label("La contraseña debe contar con mínimo 8 caracteres, una mayúscula, 2 números y un carácter especial.");
         passwordRequirementsLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;"); // Tamaño de fuente más pequeño y color gris
     
+        passwordRequirementsLabel.setWrapText(true);
+        passwordRequirementsLabel.setPrefWidth(300);
         newPasswordLabel.setPrefWidth(150);
         confirmPasswordLabel.setPrefWidth(150);
         newPasswordInput.setStyle("-fx-background-color: lightgray;");
@@ -561,7 +595,7 @@ public class View extends Application {
     
         newPasswordLabel.setAlignment(Pos.CENTER_LEFT);
         confirmPasswordLabel.setAlignment(Pos.CENTER_LEFT);
-        passwordRequirementsLabel.setAlignment(Pos.CENTER);
+        passwordRequirementsLabel.setAlignment(Pos.CENTER_LEFT);
     
         returnButton.setOnAction(e -> primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300)));
     

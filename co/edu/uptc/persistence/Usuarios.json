@@ -61,5 +61,14 @@
     "telefono": "1234567898",
     "nombre": "Andres",
     "apellido": "Torres"
+  },
+  {
+    "correoElectronico": "orlando.herrera@uptc.edu.co",
+    "contraseña": "Orlando45#",
+    "idInterno": "Orlando4240",
+    "userName": "Orlando",
+    "telefono": "1234567899",
+    "nombre": "Orlando",
+    "apellido": "Herrera"
   }
 ]
