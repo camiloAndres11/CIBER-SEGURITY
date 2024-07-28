@@ -25,12 +25,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 public class View extends Application {
 
     private Controller loginController = new Controller();
+    private int verificationCode;
 
     public static void main(String[] args) {
         launch(args);
@@ -335,6 +337,8 @@ public class View extends Application {
         primaryStage.setScene(new Scene(stackPane, 800, 600));
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private void showRecoverPasswordForm(Stage primaryStage) {
         GridPane recoverGrid = new GridPane();
         recoverGrid.setPadding(new Insets(10));
@@ -417,8 +421,13 @@ public class View extends Application {
     
         primaryStage.setScene(new Scene(stackPane, 800, 600));
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    private void showVerificationCodeForm(Stage primaryStage, String email, int verificationCode) {
+    private void showVerificationCodeForm(Stage primaryStage, String email, int initialVerificationCode) {
+        // Inicializa el código de verificación
+        this.verificationCode = initialVerificationCode;
+        
         GridPane codeGrid = new GridPane();
         codeGrid.setPadding(new Insets(10));
         codeGrid.setHgap(10);
@@ -428,11 +437,15 @@ public class View extends Application {
         TextField codeInput = new TextField();
         Button verifyButton = new Button("Verificar");
         Button returnButton = new Button("Volver");
-    
+        Hyperlink generateLink = new Hyperlink("Generar nuevo código");
+        Label newCodeText = new Label("¿Necesitas un nuevo código?");
+        
         codeLabel.setPrefWidth(150);
         codeInput.setStyle("-fx-background-color: lightgray;");
         returnButton.setPrefWidth(150);
         verifyButton.setPrefWidth(150);
+        newCodeText.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;");
+        generateLink.setStyle("-fx-font-size: 11px; -fx-text-fill: blue;");
     
         ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
         imageView.setFitHeight(80);
@@ -447,11 +460,15 @@ public class View extends Application {
         GridPane.setConstraints(imageSistemas, 1, 0);
         GridPane.setConstraints(codeLabel, 0, 1);
         GridPane.setConstraints(codeInput, 1, 1);
-        GridPane.setConstraints(returnButton, 0, 2);
-        GridPane.setConstraints(verifyButton, 1, 2);
+        GridPane.setConstraints(newCodeText, 0, 2);
+        GridPane.setConstraints(generateLink, 1, 2);
+        GridPane.setConstraints(returnButton, 0, 3);
+        GridPane.setConstraints(verifyButton, 1, 3);
     
         codeGrid.setStyle("-fx-background-color:white;");
         GridPane.setHalignment(codeLabel, HPos.CENTER);
+        GridPane.setHalignment(newCodeText, HPos.CENTER);
+        GridPane.setHalignment(generateLink, HPos.CENTER);
         GridPane.setHalignment(returnButton, HPos.CENTER);
         GridPane.setValignment(returnButton, VPos.CENTER);
         GridPane.setHalignment(verifyButton, HPos.CENTER);
@@ -472,7 +489,12 @@ public class View extends Application {
             }
         });
     
-        codeGrid.getChildren().addAll(imageView, imageSistemas, codeLabel, codeInput, returnButton, verifyButton);
+        generateLink.setOnAction(e -> {
+            this.verificationCode = generarCodigoVerificacion();  // Actualiza el código de verificación
+            mostrarCodigoVerificacion(verificationCode);
+        });
+    
+        codeGrid.getChildren().addAll(imageView, imageSistemas, codeLabel, codeInput, newCodeText, generateLink, returnButton, verifyButton);
     
         HBox hBox = new HBox(codeGrid);
         hBox.setAlignment(Pos.CENTER);
@@ -493,6 +515,9 @@ public class View extends Application {
         primaryStage.setScene(new Scene(stackPane, 800, 600));
     }
     
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     private void showNewPasswordForm(Stage primaryStage, String email) {
         GridPane passwordGrid = new GridPane();
         passwordGrid.setPadding(new Insets(10));
@@ -506,9 +531,8 @@ public class View extends Application {
         Button returnButton = new Button("Volver");
         Button saveButton = new Button("Guardar");
     
-        // Label para mostrar los requisitos de la contraseña con fuente más pequeña
         Label passwordRequirementsLabel = new Label("La contraseña debe contar con mínimo 8 caracteres, una mayúscula, 2 números y un carácter especial.");
-        passwordRequirementsLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;"); // Tamaño de fuente más pequeño y color gris
+        passwordRequirementsLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;");
     
         newPasswordLabel.setPrefWidth(150);
         confirmPasswordLabel.setPrefWidth(150);
@@ -530,14 +554,13 @@ public class View extends Application {
         GridPane.setConstraints(imageSistemas, 1, 0);
         GridPane.setConstraints(newPasswordLabel, 0, 1);
         GridPane.setConstraints(newPasswordInput, 1, 1);
-        GridPane.setConstraints(passwordRequirementsLabel, 0, 2, 2, 1); // Requiere 2 columnas de ancho
+        GridPane.setConstraints(passwordRequirementsLabel, 0, 2, 2, 1);
         GridPane.setConstraints(confirmPasswordLabel, 0, 3);
         GridPane.setConstraints(confirmPasswordInput, 1, 3);
-        
-        // Contenedor HBox para los botones
+    
         HBox buttonBox = new HBox(10, returnButton, saveButton);
         buttonBox.setAlignment(Pos.CENTER);
-        GridPane.setConstraints(buttonBox, 0, 4, 2, 1); // Requiere 2 columnas de ancho y se coloca en la fila 4
+        GridPane.setConstraints(buttonBox, 0, 4, 2, 1);
     
         passwordGrid.setStyle("-fx-background-color:white;");
         GridPane.setHalignment(newPasswordLabel, HPos.CENTER);
@@ -593,32 +616,58 @@ public class View extends Application {
         primaryStage.setScene(new Scene(stackPane, 800, 600));
     }
     
-    
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void mostrarCodigoVerificacion(int verificationCode) {
         Stage codeStage = new Stage();
         codeStage.setTitle("Código de Verificación");
-
+    
         GridPane codeGrid = new GridPane();
-        codeGrid.setPadding(new Insets(10));
+        codeGrid.setPadding(new Insets(20));
         codeGrid.setHgap(10);
-        codeGrid.setVgap(10);
-
+        codeGrid.setVgap(20);
+        codeGrid.setAlignment(Pos.CENTER); // Center the grid
+    
         Label codeLabel = new Label("Tu código de verificación es:");
+        codeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         Label codeValue = new Label(String.valueOf(verificationCode));
+        codeValue.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         Button closeButton = new Button("Cerrar");
-
+        closeButton.setStyle("-fx-font-size: 14px;");
+    
+        Label timerLabel = new Label("Tiempo restante: 60 segundos");
+        timerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+    
+        GridPane.setHalignment(codeLabel, HPos.CENTER);
+        GridPane.setHalignment(codeValue, HPos.CENTER);
+        GridPane.setHalignment(timerLabel, HPos.CENTER);
+        GridPane.setHalignment(closeButton, HPos.CENTER);
+    
         GridPane.setConstraints(codeLabel, 0, 0);
-        GridPane.setConstraints(codeValue, 1, 0);
-        GridPane.setConstraints(closeButton, 1, 1);
-
+        GridPane.setConstraints(codeValue, 0, 1);
+        GridPane.setConstraints(timerLabel, 0, 2);
+        GridPane.setConstraints(closeButton, 0, 3);
+    
         closeButton.setOnAction(e -> codeStage.close());
-
-        codeGrid.getChildren().addAll(codeLabel, codeValue, closeButton);
-
-        Scene codeScene = new Scene(codeGrid, 300, 200);
+    
+        codeGrid.getChildren().addAll(codeLabel, codeValue, timerLabel, closeButton);
+    
+        Scene codeScene = new Scene(codeGrid, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
+    
+        // Timeline for countdown
+        final int[] secondsRemaining = {60};
+        Timeline countdown = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            secondsRemaining[0]--;
+            timerLabel.setText("Tiempo restante: " + secondsRemaining[0] + " segundos");
+    
+            if (secondsRemaining[0] <= 0) {
+                codeStage.close();
+            }
+        }));
+        countdown.setCycleCount(60); // Run for 60 seconds
+        countdown.play();
     }
 
     private int generarCodigoVerificacion() {
