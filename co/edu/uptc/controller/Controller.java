@@ -72,6 +72,71 @@ public class Controller {
         return false;
     }
 
+    public boolean validarNombres(String firstName, String lastName) {
+        if(firstName.matches("[a-zA-Z]+") && lastName.matches("[a-zA-Z]+"))  {
+               return true;
+        }
+        return false;
+    }
+
+    public String crearCorreo(String correoIngresado) throws IOException  {
+
+        String[] correo=correoIngresado.split("@");
+        String primeraParte=correo[0];
+        int numero=0;
+        String valorNuevoCorreo =primeraParte;
+        ArrayList<Model> cuentasEstudiantes = new ArrayList<>(JsonFile.readFromJson(FILE_PATH));
+
+
+        Model model=new Model();
+        for (int i = cuentasEstudiantes.size() - 1; i >= 0; i--) {
+            model=cuentasEstudiantes.get(i);
+            String correoExistente=model.getCorreoElectronico();
+            String [] valor=correoExistente.split("@");
+            String correoExistenteString=valor[0];
+            Pattern patternString=Pattern.compile("([a-zA-Z]+)\\d*");
+            Matcher matcherString=patternString.matcher(correoExistenteString);
+
+            Pattern patternStringIngreso=Pattern.compile("([a-zA-Z]+)\\d*");
+            Matcher matcherStringIngreso=patternStringIngreso.matcher(valorNuevoCorreo);
+
+            String stringCorreo=null;
+            if(matcherString.find())    {
+             stringCorreo=matcherString.group(1);
+            }
+
+            String stringCorreoIngreso=null;
+
+            if(matcherStringIngreso.find())    {
+               stringCorreoIngreso=matcherStringIngreso.group(1);
+            }
+       
+            if (stringCorreoIngreso != null && stringCorreoIngreso.equalsIgnoreCase(stringCorreo)) {
+                Pattern pattern=Pattern.compile("\\d+");
+                Matcher matcher=pattern.matcher(correoExistenteString);
+               if(matcher.find())  {
+                  String num=matcher.group();
+                  numero=Integer.parseInt(num) + 1;
+
+                 valorNuevoCorreo= primeraParte + numero + "@uptc.edu.co";
+               }else   {
+                  valorNuevoCorreo=primeraParte + "1" + "@uptc.edu.co";
+               }
+               break;
+              }else   {
+               valorNuevoCorreo=correoIngresado;
+              }
+        }
+        
+            
+            
+
+        return valorNuevoCorreo;
+        
+    }
+
+
+
     public void actualizarContraseña(String email, String nuevaContraseña) {
         for (Model model : cuentasEstudiantes) {
             if (model.getCorreoElectronico().equals(email)) {
@@ -95,4 +160,3 @@ public class Controller {
         return false;
     }
 }
-
