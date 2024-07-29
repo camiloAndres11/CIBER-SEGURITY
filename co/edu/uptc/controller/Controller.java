@@ -135,11 +135,20 @@ public class Controller {
         
     }
 
-
-
-    public void actualizarContraseña(String email, String nuevaContraseña) {
+    public void actualizarContraseña(String email, String nuevaContraseña) throws Exception {
         for (Model model : cuentasEstudiantes) {
             if (model.getCorreoElectronico().equals(email)) {
+                // Verificar que la nueva contraseña no sea igual a la actual
+                if (model.getContraseña().equals(nuevaContraseña)) {
+                    throw new Exception("La nueva contraseña no puede ser igual a una anterior.");
+                }
+                
+                // Verificar que la nueva contraseña cumpla con los requisitos
+                if (!verificarContraseña(nuevaContraseña)) {
+                    throw new Exception("La nueva contraseña no cumple con los requisitos.");
+                }
+                
+                // Actualizar la contraseña
                 model.setContraseña(nuevaContraseña);
                 try {
                     JsonFile.writeToJson(cuentasEstudiantes, FILE_PATH);

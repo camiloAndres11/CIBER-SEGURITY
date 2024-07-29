@@ -625,20 +625,20 @@ public class View extends Application {
             String newPassword = newPasswordInput.getText().trim();
             String confirmPassword = confirmPasswordInput.getText().trim();
     
-            if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Los campos de contraseña no pueden estar vacíos.");
-            } else if (!newPassword.equals(confirmPassword)) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Las contraseñas no coinciden.");
-            } else if (!loginController.verificarContraseña(newPassword)) {
-                showAlert(Alert.AlertType.ERROR, "Error", "La nueva contraseña no cumple los requisitos.");
-            } else {
-                try {
+            try {
+                if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Los campos de contraseña no pueden estar vacíos.");
+                } else if (!newPassword.equals(confirmPassword)) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Las contraseñas no coinciden.");
+                } else if (!loginController.verificarContraseña(newPassword)) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "La nueva contraseña no cumple los requisitos.");
+                } else {
                     loginController.actualizarContraseña(email, newPassword);
                     showAlert(Alert.AlertType.INFORMATION, "Éxito", "Contraseña cambiada exitosamente.");
                     primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-                } catch (Exception ex) {
-                    showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
                 }
+            } catch (Exception ex) {
+                showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
             }
         });
     
@@ -662,8 +662,8 @@ public class View extends Application {
     
         primaryStage.setScene(new Scene(stackPane, 800, 600));
     }
+        
 
-    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void mostrarCodigoVerificacion(int verificationCode) {
