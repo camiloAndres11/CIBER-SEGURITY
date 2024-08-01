@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -218,104 +219,101 @@ public class View extends Application {
 
     private void showRegisterForm(Stage primaryStage) {
         GridPane registerGrid = new GridPane();
-        registerGrid.setPadding(new Insets(10));
-        registerGrid.setHgap(10);
-        registerGrid.setVgap(10);
+    registerGrid.setPadding(new Insets(10));
+    registerGrid.setHgap(10);
+    registerGrid.setVgap(10);
 
-        Image icon = new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg");
-        primaryStage.getIcons().add(icon);
+    Image icon = new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg");
+    primaryStage.getIcons().add(icon);
 
-        Label usernameLabel = new Label("Nombre de usuario:");
-        TextField usernameInput = new TextField();
-        Label passwordLabel = new Label("Contraseña:");
-        PasswordField passwordInput = new PasswordField();
-        Label explanationPassword = new Label("Debe tener al menos 8 caracteres, incluir una letra mayúscula, dos números y un carácter especial.");
-        Label comfirmPaswordLabel = new Label("Confirmar contraseña");
-        PasswordField comfirmPassword = new PasswordField();
-        Label phoneLabel = new Label("Número de teléfono:");
-        TextField phoneInput = new TextField();
-        Label firstNameLabel = new Label("Nombre:");
-        TextField firstNameInput = new TextField();
-        Label lastNameLabel = new Label("Apellido:");
-        TextField lastNameInput = new TextField();
-        Button returnButton = new Button("Volver");
-        Button registerButton = new Button("Registrar");
-        Label messageError=new Label();
+    Label usernameLabel = new Label("Nombre de usuario:");
+    TextField usernameInput = new TextField();
+    Label passwordLabel = new Label("Contraseña:");
+    PasswordField passwordInput = new PasswordField();
+    Label explanationPassword = new Label("Debe tener al menos 8 caracteres, incluir una letra mayúscula, dos números y un carácter especial.");
+    Label comfirmPaswordLabel = new Label("Confirmar contraseña");
+    PasswordField comfirmPassword = new PasswordField();
+    Label phoneLabel = new Label("Número de teléfono:");
+    TextField phoneInput = new TextField();
+    Label firstNameLabel = new Label("Nombre:");
+    TextField firstNameInput = new TextField();
+    Label lastNameLabel = new Label("Apellido:");
+    TextField lastNameInput = new TextField();
+    Button returnButton = new Button("Volver");
+    Button registerButton = new Button("Registrar");
+    Label messageError = new Label();
 
-        messageError.setStyle("-fx-text-fill: red;");
+    messageError.setStyle("-fx-text-fill: red;");
 
-        explanationPassword.setWrapText(true);
-        usernameLabel.setPrefWidth(150);
-        passwordLabel.setPrefWidth(150);
-        explanationPassword.setPrefWidth(300);
-        phoneLabel.setPrefWidth(150);
-        firstNameLabel.setPrefWidth(150);
-        lastNameLabel.setPrefWidth(150);
-        returnButton.setPrefWidth(100);
-        registerButton.setPrefWidth(100);
+    explanationPassword.setWrapText(true);
+    explanationPassword.setMaxWidth(Double.MAX_VALUE);
+    usernameLabel.setPrefWidth(150);
+    passwordLabel.setPrefWidth(150);
+    explanationPassword.setPrefWidth(300);
+    phoneLabel.setPrefWidth(150);
+    firstNameLabel.setPrefWidth(150);
+    lastNameLabel.setPrefWidth(150);
+    returnButton.setPrefWidth(100);
+    registerButton.setPrefWidth(100);
 
-        messageError.setWrapText(true);
-        messageError.setPrefWidth(300);
+    messageError.setWrapText(true);
+    messageError.setPrefWidth(300);
 
+    explanationPassword.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;");
+    registerGrid.setStyle("-fx-background-color:white;");
+    usernameInput.setStyle("-fx-background-color: lightgray;");
+    passwordInput.setStyle("-fx-background-color: lightgray;");
+    phoneInput.setStyle("-fx-background-color: lightgray;");
+    firstNameInput.setStyle("-fx-background-color: lightgray;");
+    lastNameInput.setStyle("-fx-background-color: lightgray;");
+    comfirmPassword.setStyle("-fx-background-color: lightgray;");
+    registerButton.setStyle("-fx-background-color: #4299d6 ;");
 
-        explanationPassword.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;");
-        registerGrid.setStyle("-fx-background-color:white;");
-        usernameInput.setStyle("-fx-background-color: lightgray;");
-        passwordInput.setStyle("-fx-background-color: lightgray;");
-        phoneInput.setStyle("-fx-background-color: lightgray;");
-        firstNameInput.setStyle("-fx-background-color: lightgray;");
-        lastNameInput.setStyle("-fx-background-color: lightgray;");
-        comfirmPassword.setStyle("-fx-background-color: lightgray;");
-        registerButton.setStyle("-fx-background-color: #4299d6 ;");
+    ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
+    imageView.setFitHeight(80);
+    imageView.setFitWidth(150);
+    GridPane.setHalignment(imageView, HPos.LEFT);
+    ImageView imageSistemas = new ImageView(new Image("co\\edu\\uptc\\util\\logo-sistemas.png"));
+    imageSistemas.setFitHeight(80);
+    imageSistemas.setFitWidth(80);
+    GridPane.setHalignment(imageSistemas, HPos.RIGHT);
 
-        ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
-        imageView.setFitHeight(80);
-        imageView.setFitWidth(150);
-        GridPane.setHalignment(imageView, HPos.LEFT);
-        ImageView imageSistemas = new ImageView(new Image("co\\edu\\uptc\\util\\logo-sistemas.png"));
-        imageSistemas.setFitHeight(80);
-        imageSistemas.setFitWidth(80);
-        GridPane.setHalignment(imageSistemas, HPos.RIGHT);
+    GridPane.setConstraints(imageView, 0, 0);
+    GridPane.setConstraints(imageSistemas, 1, 0);
+    GridPane.setConstraints(usernameLabel, 0, 1);
+    GridPane.setConstraints(usernameInput, 1, 1);
+    GridPane.setConstraints(passwordLabel, 0, 2);
+    GridPane.setConstraints(passwordInput, 1, 2);
+    GridPane.setConstraints(comfirmPaswordLabel, 0, 3);
+    GridPane.setConstraints(comfirmPassword, 1, 3);
+    GridPane.setConstraints(explanationPassword, 0, 4, 2, 1);
+    GridPane.setConstraints(phoneLabel, 0, 5);
+    GridPane.setConstraints(phoneInput, 1, 5);
+    GridPane.setConstraints(firstNameLabel, 0, 6);
+    GridPane.setConstraints(firstNameInput, 1, 6);
+    GridPane.setConstraints(lastNameLabel, 0, 7);
+    GridPane.setConstraints(lastNameInput, 1, 7);
+    GridPane.setConstraints(returnButton, 0, 8);
+    GridPane.setConstraints(registerButton, 1, 8);
+    GridPane.setConstraints(messageError, 0, 9, 2, 1);
 
+    GridPane.setHalignment(usernameLabel, HPos.CENTER);
+    GridPane.setHalignment(passwordLabel, HPos.CENTER);
+    GridPane.setHalignment(phoneLabel, HPos.CENTER);
+    GridPane.setHalignment(firstNameLabel, HPos.CENTER);
+    GridPane.setHalignment(lastNameLabel, HPos.CENTER);
+    GridPane.setHalignment(returnButton, HPos.CENTER);
+    GridPane.setValignment(returnButton, VPos.CENTER);
+    GridPane.setHalignment(registerButton, HPos.CENTER);
+    GridPane.setValignment(registerButton, VPos.CENTER);
 
-        GridPane.setConstraints(imageView, 0, 0);
-        GridPane.setConstraints(imageSistemas, 1, 0);
-        GridPane.setConstraints(usernameLabel, 0, 1);
-        GridPane.setConstraints(usernameInput, 1, 1);
-        GridPane.setConstraints(passwordLabel, 0, 2);
-        GridPane.setConstraints(passwordInput, 1, 2);
-        GridPane.setConstraints(comfirmPaswordLabel, 0, 3);
-        GridPane.setConstraints(comfirmPassword, 1, 3);
-        GridPane.setConstraints(explanationPassword, 0, 4, 4, 1);
-        GridPane.setConstraints(phoneLabel, 0, 5);
-        GridPane.setConstraints(phoneInput, 1, 5);
-        GridPane.setConstraints(firstNameLabel, 0, 6);
-        GridPane.setConstraints(firstNameInput, 1, 6);
-        GridPane.setConstraints(lastNameLabel, 0, 7);
-        GridPane.setConstraints(lastNameInput, 1, 7);
-        GridPane.setConstraints(returnButton, 0, 8);
-        GridPane.setConstraints(registerButton, 1, 8);
-        GridPane.setConstraints(messageError, 0, 9, 9 ,1);
-
-        GridPane.setHalignment(usernameLabel, HPos.CENTER);
-        GridPane.setHalignment(passwordLabel, HPos.CENTER);
-        GridPane.setHalignment(phoneLabel, HPos.CENTER);
-        GridPane.setHalignment(firstNameLabel, HPos.CENTER);
-        GridPane.setHalignment(lastNameLabel, HPos.CENTER);
-        GridPane.setHalignment(returnButton, HPos.CENTER);
-        GridPane.setValignment(returnButton, VPos.CENTER);
-        GridPane.setHalignment(registerButton, HPos.CENTER);
-        GridPane.setValignment(registerButton, VPos.CENTER);
-
-        usernameLabel.setAlignment(Pos.CENTER_LEFT);
-        passwordLabel.setAlignment(Pos.CENTER_LEFT);
-        phoneLabel.setAlignment(Pos.CENTER_LEFT);
-        firstNameLabel.setAlignment(Pos.CENTER_LEFT);
-        lastNameLabel.setAlignment(Pos.CENTER_LEFT);
-        //GridPane.setHalignment(explanationPassword, HPos.CENTER);
-        explanationPassword.setAlignment(Pos.CENTER_LEFT);
-        messageError.setAlignment(Pos.CENTER_LEFT);
-
+    usernameLabel.setAlignment(Pos.CENTER_LEFT);
+    passwordLabel.setAlignment(Pos.CENTER_LEFT);
+    phoneLabel.setAlignment(Pos.CENTER_LEFT);
+    firstNameLabel.setAlignment(Pos.CENTER_LEFT);
+    lastNameLabel.setAlignment(Pos.CENTER_LEFT);
+    explanationPassword.setAlignment(Pos.CENTER_LEFT);
+    messageError.setAlignment(Pos.CENTER_LEFT);
         
 
 
@@ -329,6 +327,7 @@ public class View extends Application {
         registerButton.setOnAction(e -> {
 
             usernameInput.setStyle("-fx-background-color: lightgray;");
+
         passwordInput.setStyle("-fx-background-color: lightgray;");
         phoneInput.setStyle("-fx-background-color: lightgray;");
         firstNameInput.setStyle("-fx-background-color: lightgray;");
@@ -517,36 +516,31 @@ public class View extends Application {
 
         registerGrid.getChildren().addAll(imageView, imageSistemas, usernameLabel, usernameInput, passwordLabel, explanationPassword, comfirmPaswordLabel, comfirmPassword, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput, returnButton, registerButton, messageError);
 
-        
+    ColumnConstraints col1 = new ColumnConstraints();
+    col1.setPercentWidth(50);
+    ColumnConstraints col2 = new ColumnConstraints();
+    col2.setPercentWidth(50);
+    registerGrid.getColumnConstraints().addAll(col1, col2);
 
-        HBox hBox = new HBox(registerGrid);
-        hBox.setAlignment(Pos.CENTER);
+    HBox hBox = new HBox(registerGrid);
+    hBox.setAlignment(Pos.CENTER);
+    hBox.setPadding(new Insets(0)); // Ajustar el padding si es necesario
 
+    VBox vbox = new VBox(hBox);
+    vbox.setAlignment(Pos.CENTER);
+    vbox.setPadding(new Insets(20));
 
-        VBox vbox = new VBox(hBox);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setPadding(new Insets(20));
+    StackPane stackPane = new StackPane();
+    ImageView backgroundImage = new ImageView(new Image("co\\edu\\uptc\\util\\imagen.png"));
+    backgroundImage.setPreserveRatio(false);
+    backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+    backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
 
-        StackPane stackPane = new StackPane();
-        ImageView backgroundImage = new ImageView(new Image("co\\edu\\uptc\\util\\imagen.png"));
-        backgroundImage.setPreserveRatio(false);
+    stackPane.getChildren().addAll(backgroundImage, vbox);
 
-
-        //bagroundImage.setFitHeight(600);
-        //bagroundImage.setFitWidth(800);
-
-        backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
-        backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
-
-        //stackPane.setCenterShape(true);
-        
-        stackPane.getChildren().addAll(backgroundImage, vbox);
-
-
-        //primaryStage.setFullScreen(true);
-        primaryStage.setScene(new Scene(stackPane));
-        primaryStage.setMaximized(true);
-        primaryStage.show();
+    primaryStage.setScene(new Scene(stackPane));
+    primaryStage.setMaximized(true);
+    primaryStage.show();
     }
 
     private void showRegisterUser(Stage primaryStage, String userName, String email, String password, String phone, String firstName, String LastName) {  

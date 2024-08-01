@@ -52,5 +52,14 @@
     "telefono": "1234567890",
     "nombre": "Andres",
     "apellido": "Torres"
+  },
+  {
+    "correoElectronico": "jorge.ulloa@uptc.edu.co",
+    "contraseña": "Jorge56#",
+    "idInterno": "Jorge1518",
+    "userName": "Jorge",
+    "telefono": "1234567890",
+    "nombre": "Jorge",
+    "apellido": "Ulloa"
   }
 ]
