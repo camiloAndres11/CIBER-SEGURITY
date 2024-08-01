@@ -25,6 +25,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -221,6 +222,9 @@ public class View extends Application {
         registerGrid.setHgap(10);
         registerGrid.setVgap(10);
 
+        Image icon = new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg");
+        primaryStage.getIcons().add(icon);
+
         Label usernameLabel = new Label("Nombre de usuario:");
         TextField usernameInput = new TextField();
         Label passwordLabel = new Label("Contraseña:");
@@ -232,10 +236,13 @@ public class View extends Application {
         TextField phoneInput = new TextField();
         Label firstNameLabel = new Label("Nombre:");
         TextField firstNameInput = new TextField();
-        Label lastNameLabel = new Label("Apellidos:");
+        Label lastNameLabel = new Label("Apellido:");
         TextField lastNameInput = new TextField();
         Button returnButton = new Button("Volver");
         Button registerButton = new Button("Registrar");
+        Label messageError=new Label();
+
+        messageError.setStyle("-fx-text-fill: red;");
 
         explanationPassword.setWrapText(true);
         usernameLabel.setPrefWidth(150);
@@ -244,8 +251,12 @@ public class View extends Application {
         phoneLabel.setPrefWidth(150);
         firstNameLabel.setPrefWidth(150);
         lastNameLabel.setPrefWidth(150);
-        returnButton.setPrefWidth(150);
-        registerButton.setPrefWidth(150);
+        returnButton.setPrefWidth(100);
+        registerButton.setPrefWidth(100);
+
+        messageError.setWrapText(true);
+        messageError.setPrefWidth(300);
+
 
         explanationPassword.setStyle("-fx-font-size: 11px; -fx-text-fill: gray;");
         registerGrid.setStyle("-fx-background-color:white;");
@@ -255,6 +266,7 @@ public class View extends Application {
         firstNameInput.setStyle("-fx-background-color: lightgray;");
         lastNameInput.setStyle("-fx-background-color: lightgray;");
         comfirmPassword.setStyle("-fx-background-color: lightgray;");
+        registerButton.setStyle("-fx-background-color: #4299d6 ;");
 
         ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
         imageView.setFitHeight(80);
@@ -283,6 +295,7 @@ public class View extends Application {
         GridPane.setConstraints(lastNameInput, 1, 7);
         GridPane.setConstraints(returnButton, 0, 8);
         GridPane.setConstraints(registerButton, 1, 8);
+        GridPane.setConstraints(messageError, 0, 9, 9 ,1);
 
         GridPane.setHalignment(usernameLabel, HPos.CENTER);
         GridPane.setHalignment(passwordLabel, HPos.CENTER);
@@ -301,14 +314,29 @@ public class View extends Application {
         lastNameLabel.setAlignment(Pos.CENTER_LEFT);
         //GridPane.setHalignment(explanationPassword, HPos.CENTER);
         explanationPassword.setAlignment(Pos.CENTER_LEFT);
+        messageError.setAlignment(Pos.CENTER_LEFT);
+
+        
+
 
         returnButton.setOnAction(e -> {
-            Scene loginScene = new Scene(createLoginForm(primaryStage), 400, 300);
+            Scene loginScene = new Scene(createLoginForm(primaryStage));
             applyStyles(loginScene);
             primaryStage.setScene(loginScene);
+            primaryStage.setMaximized(true);
         });
 
         registerButton.setOnAction(e -> {
+
+            usernameInput.setStyle("-fx-background-color: lightgray;");
+        passwordInput.setStyle("-fx-background-color: lightgray;");
+        phoneInput.setStyle("-fx-background-color: lightgray;");
+        firstNameInput.setStyle("-fx-background-color: lightgray;");
+        lastNameInput.setStyle("-fx-background-color: lightgray;");
+        comfirmPassword.setStyle("-fx-background-color: lightgray;");
+        registerButton.setStyle("-fx-background-color: #4299d6 ;");
+            messageError.setText("");
+
             String username = usernameInput.getText().trim();
             String password = passwordInput.getText().trim();
             String passwordComfirm = comfirmPassword.getText().trim();
@@ -338,57 +366,143 @@ public class View extends Application {
 
             String FILE_PATH = "co\\edu\\uptc\\persistence\\Usuarios.json";
             boolean isExist = false;
-            if (usernameInput.getText().isEmpty() || phoneInput.getText().isEmpty() || firstNameInput.getText().isEmpty() || lastNameInput.getText().isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Campos incompletos, por favor, complete todos los campos requeridos");
-            } else {
+            boolean passwordExist=false;
+            if (usernameInput.getText().trim().isEmpty()) {
+
+                usernameInput.setStyle("-fx-background-color: lightcoral;");
+                messageError.setText("⚠ El campo de nombre de usuario no puede estar vacío. Por favor, ingréselo.");
+
+            }else if ( phoneInput.getText().isEmpty())   {
+                phoneInput.setStyle("-fx-background-color: lightcoral;");
+                messageError.setText("⚠ El campo de telefono no puede estar vacío. Por favor, ingréselo.");
+
+            }else if ( firstNameInput.getText().isEmpty())   {
+
+                firstNameInput.setStyle("-fx-background-color: lightcoral;");
+                messageError.setText("⚠ El campo de nombre no puede estar vacío. Por favor, ingréselo.");
+
+            }else if ( lastNameInput.getText().isEmpty())   {
+                lastNameInput.setStyle("-fx-background-color: lightcoral;");
+                messageError.setText("⚠ El campo de apellido no puede estar vacío. Por favor, ingréselo.");
+            
+            }else if ( passwordInput.getText().trim().isEmpty())   {
+                passwordInput.setStyle("-fx-background-color: lightcoral;");
+                messageError.setText("⚠ El campo de contraseña no puede estar vacío. Por favor, ingréselo.");
+
+            }else if( comfirmPassword.getText().trim().isEmpty()){
+                comfirmPassword.setStyle("-fx-background-color: lightcoral;");
+                messageError.setText("⚠ El campo de contraseña no puede estar vacío. Por favor, ingréselo.");
+
+            }else {
                 try {
                     ArrayList<Model> cuentasEstudiantes = new ArrayList<>(JsonFile.readFromJson(FILE_PATH));
                     for (Model model : cuentasEstudiantes) {
                         if (model.getUserName().equals(username)) {
                             isExist = true;
                         }
+                        
+                        if (model.getContraseña().equals(password)){
+                            passwordExist=true;
+                            
+                        }
+                            
+                        
                     }
 
                     if (password.equals(passwordComfirm)) {
 
-                        if (loginController.validarNombres(firstName, lastName)) {
+                        if (firstName.matches("[a-zA-Z]+") ) {
 
-                            if (!isExist) {
+                            if (lastName.matches("[a-zA-Z]+")) {
+                                if (!isExist) {
 
-                                for (int i = 0; i < phone.length(); i++) {
-                                    contar = contar + 1;
-
-                                }
-
-                                if (contar == 10) {
-                                    if (isNumber) {
-                                        try {
-                                            loginController.registrarUsuario(emailString, idInterno, username, password, phone, firstName, lastName);
-                                            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
-                                            primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
-                                        } catch (Exception ex) {
-                                            showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                                    if(!passwordExist)  {
+    
+                                        for (int i = 0; i < phone.length(); i++) {
+                                            contar = contar + 1;
+        
                                         }
-                                    } else if (!isNumber) {
-                                        showAlert(Alert.AlertType.ERROR, "Error", " Numero de Telefono Invalido");
-
+        
+                                        if (contar == 10) {
+    
+    
+                                            if (firstName.length()>=3) {
+    
+                                                if (lastName.length()>=3) {
+    
+                                                    if (isNumber) {
+                                                        try {
+                                                            loginController.registrarUsuario(emailString, idInterno, username, password, phone, firstName, lastName);
+                                                            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
+                                                            showRegisterUser(primaryStage, username, emailString, password, phone, firstName, lastName);
+                                                            primaryStage.setScene(new Scene(createLoginForm(primaryStage)));
+                                                            primaryStage.setMaximized(true); 
+                                                            primaryStage.show();
+                                                        } catch (Exception ex) {
+                                                            showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
+                                                        }
+                                                    } else if (!isNumber) {
+                                                        phoneInput.setStyle("-fx-background-color: lightcoral;");
+                                                        messageError.setText("Numero de telefono invalido, ingrese solo numeros");
+                                                    }
+    
+    
+                                                    
+                                                }else if (lastName.length()<3) {
+                                                    lastNameInput.setStyle("-fx-background-color: lightcoral;");
+                                                    messageError.setText("El apellido debe tener mas de 2 letras");
+                                                    
+                                                }
+                                                
+                                            }else if (firstName.length()<3) {
+                                                firstNameInput.setStyle("-fx-background-color: lightcoral;");
+                                                messageError.setText("El nombre debe tener mas de 3 letras");
+                                                
+                                            }
+    
+                                          
+                                        } else if (contar < 10 || contar > 10) {
+                                           
+                                            phoneInput.setStyle("-fx-background-color: lightcoral;");
+                                            messageError.setText("El numero de telefono debe tener solo 10 caracteres");
+                                        }
+        
+                                        
+                                    }else if(passwordExist) {
+                                        comfirmPassword.setStyle("-fx-background-color: lightcoral;");
+                                        passwordInput.setStyle("-fx-background-color: lightcoral;");
+                                        messageError.setText("Contraseña ya existentes");
+    
                                     }
-                                } else if (contar < 10 || contar > 10) {
-                                    showAlert(Alert.AlertType.ERROR, "Error", "El numero de telefono debe tener 10 caracteres");
-
+    
+                                   
+    
+                                } else if (isExist) {
+                                    usernameInput.setStyle("-fx-background-color: lightcoral;");
+                                    messageError.setText("Nombre de usuario ya existente");
                                 }
+                                
 
 
-                            } else if (isExist) {
-                                showAlert(Alert.AlertType.ERROR, "Error", "Nombre de usuario ya existente");
+                            }else   {
+                                lastNameInput.setStyle("-fx-background-color: lightcoral;");
+                                messageError.setText("Apellido invalido, solo debe contener letras");
+
                             }
+
+                          
                         } else {
-                            showAlert(Alert.AlertType.ERROR, "Error", "Nombre o Apellido invalido");
+
+                            firstNameInput.setStyle("-fx-background-color: lightcoral;");
+                            messageError.setText("Nombre invalido, solo debe contener letras");
 
                         }
 
                     } else {
-                        showAlert(Alert.AlertType.ERROR, "Error", "Las contraseñas no coinciden");
+                       
+                        comfirmPassword.setStyle("-fx-background-color: lightcoral;");
+                        passwordInput.setStyle("-fx-background-color: lightcoral;");
+                        messageError.setText("Las contraseñas no coinciden");
                     }
 
 
@@ -401,8 +515,9 @@ public class View extends Application {
 
         });
 
-        registerGrid.getChildren().addAll(imageView, imageSistemas, usernameLabel, usernameInput, passwordLabel, explanationPassword, comfirmPaswordLabel, comfirmPassword, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput, returnButton, registerButton);
+        registerGrid.getChildren().addAll(imageView, imageSistemas, usernameLabel, usernameInput, passwordLabel, explanationPassword, comfirmPaswordLabel, comfirmPassword, passwordInput, phoneLabel, phoneInput, firstNameLabel, firstNameInput, lastNameLabel, lastNameInput, returnButton, registerButton, messageError);
 
+        
 
         HBox hBox = new HBox(registerGrid);
         hBox.setAlignment(Pos.CENTER);
@@ -423,12 +538,129 @@ public class View extends Application {
         backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
         backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
 
-        stackPane.setCenterShape(true);
+        //stackPane.setCenterShape(true);
+        
         stackPane.getChildren().addAll(backgroundImage, vbox);
 
 
+        //primaryStage.setFullScreen(true);
         primaryStage.setScene(new Scene(stackPane));
         primaryStage.setMaximized(true);
+        primaryStage.show();
+    }
+
+    private void showRegisterUser(Stage primaryStage, String userName, String email, String password, String phone, String firstName, String LastName) {  
+
+        Stage userInfoStage = new Stage();
+    userInfoStage.initModality(Modality.APPLICATION_MODAL);
+    userInfoStage.setTitle("Información del Usuario");
+
+    Image icon = new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg");
+   primaryStage.getIcons().add(icon);
+
+   userInfoStage.setResizable(false);
+
+    GridPane userRegistrerInfo = new GridPane();
+    userRegistrerInfo.setPadding(new Insets(10));
+    userRegistrerInfo.setHgap(10);
+    userRegistrerInfo.setVgap(10);
+
+    Label userDates=new Label("DATOS REGISTRADOS");
+    Label usernameLabel = new Label("Nombre de usuario:");
+    Label usernameValue = new Label(userName);
+    Label emailLabel = new Label("Correo electronico:");
+    Label emailValue = new Label(email);
+    Label passwordLabel = new Label("Contraseña:");
+    Label passwordValue = new Label(password);
+    Label phoneLabel = new Label("Número de teléfono:");
+    Label phoneValue = new Label(phone);
+    Label firstNameLabel = new Label("Nombre:");
+    Label firstNameValue = new Label(firstName);
+    Label lastNameLabel = new Label("Apellido:");
+    Label lastNameValue = new Label(LastName);
+
+    usernameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    emailLabel.setStyle("-fx-font-weight: bold;-fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    passwordLabel.setStyle("-fx-font-weight: bold;-fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    phoneLabel.setStyle("-fx-font-weight: bold;-fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    firstNameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    lastNameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+
+    usernameLabel.setPrefWidth(150);
+    emailLabel.setPrefWidth(150);
+    passwordLabel.setPrefWidth(150);
+    phoneLabel.setPrefWidth(150);
+    firstNameLabel.setPrefWidth(150);
+    lastNameLabel.setPrefWidth(150);
+
+
+
+
+    usernameValue.setStyle("-fx-font-weight: bold;-fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    usernameValue.setPrefWidth(150);
+    emailValue.setStyle("-fx-font-weight: bold; -fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    emailValue.setPrefWidth(150);
+    passwordValue.setStyle("-fx-font-weight: bold; -fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    passwordValue.setPrefWidth(150);
+    phoneValue.setStyle("-fx-font-weight: bold; -fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    phoneValue.setPrefWidth(150);
+    firstNameValue.setStyle("-fx-font-weight: bold; -fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    firstNameValue.setPrefWidth(150);
+    lastNameValue.setStyle("-fx-font-weight: bold; -fx-background-color: lightgray; border-color: black; -fx-border-width: 10px; -fx-padding: 5px;");
+    lastNameValue.setPrefWidth(150);
+
+    userDates.setStyle("-fx-font-weight: bold; -fx-font-weight: bold; -fx-font-size: 16px; -fx-underline: true; -fx-background-color: white;");
+    userDates.setPrefWidth(200);
+    userRegistrerInfo.add(userDates, 0, 0);
+    GridPane.setColumnSpan(userDates, 2);
+    GridPane.setHalignment(userDates, HPos.CENTER);
+    
+
+    userRegistrerInfo.add(usernameLabel, 0, 1);
+    userRegistrerInfo.add(usernameValue, 1, 1);
+    userRegistrerInfo.add(emailLabel, 0, 2);
+    userRegistrerInfo.add(emailValue, 1, 2);
+    userRegistrerInfo.add(passwordLabel, 0, 3);
+    userRegistrerInfo.add(passwordValue, 1, 3);
+    userRegistrerInfo.add(phoneLabel, 0, 4);
+    userRegistrerInfo.add(phoneValue, 1, 4);
+    userRegistrerInfo.add(firstNameLabel, 0, 5);
+    userRegistrerInfo.add(firstNameValue, 1, 5);
+    userRegistrerInfo.add(lastNameLabel, 0, 6);
+    userRegistrerInfo.add(lastNameValue, 1, 6);
+
+
+
+    Button button = new Button("Aceptar");
+    
+    button.setStyle("-fx-background-color: #4299d6;");
+    button.setPrefWidth(100);
+    userRegistrerInfo.add(button, 0, 7 , 1, 7); 
+    GridPane.setColumnSpan(button, 2);
+    GridPane.setHalignment(button, HPos.CENTER); 
+    button.setOnAction(e -> userInfoStage.close());
+
+    
+
+    
+    
+    ImageView backgroundImage = new ImageView(new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg"));
+   // backgroundImage.setPreserveRatio(false);
+backgroundImage.setFitHeight(350);
+backgroundImage.setFitWidth(300);
+   // backgroundImage.fitWidthProperty().bind(primaryStage.widthProperty());
+    //backgroundImage.fitHeightProperty().bind(primaryStage.heightProperty());
+
+    StackPane stackPane=new StackPane();
+    stackPane.getChildren().addAll(backgroundImage,userRegistrerInfo);
+    
+
+    Scene userInfoScene = new Scene( stackPane, 350, 450);
+    userInfoStage.setScene(userInfoScene);
+    userInfoStage.sizeToScene();
+    userInfoStage.show();
+
+
     }
 
     private void showRecoverPasswordForm(Stage primaryStage) {

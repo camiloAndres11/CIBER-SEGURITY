@@ -43,5 +43,14 @@
     "telefono": "33233232",
     "nombre": "Pirlo",
     "apellido": "zaneti"
+  },
+  {
+    "correoElectronico": "andres.torres1@uptc.edu.co",
+    "contraseña": "Andres45#",
+    "idInterno": "Andrew9840",
+    "userName": "Andrew",
+    "telefono": "1234567890",
+    "nombre": "Andres",
+    "apellido": "Torres"
   }
 ]
