@@ -210,6 +210,7 @@ public class View extends Application {
             Scene loginScene = new Scene(createLoginForm(primaryStage), 800, 600);
             applyStyles(loginScene);
             primaryStage.setScene(loginScene);
+
         });
 
         mainGrid.getChildren().addAll(welcomeLabel, logoutButton);
@@ -218,6 +219,7 @@ public class View extends Application {
         Scene mainScene = new Scene(mainGrid, 800, 600);
         applyStyles(mainScene);
         primaryStage.setScene(mainScene);
+        primaryStage.setMaximized(true);
     }
 
 
@@ -359,7 +361,7 @@ public class View extends Application {
             boolean isNumber = true;
 
             try {
-                Integer.parseInt(phone);
+                Double.parseDouble(phone);
             } catch (NumberFormatException exception) {
                 isNumber = false;
             }
@@ -417,27 +419,29 @@ public class View extends Application {
                                 if (!isExist) {
 
                                     if(!passwordExist)  {
-    
+
                                         for (int i = 0; i < phone.length(); i++) {
                                             contar = contar + 1;
-        
+
                                         }
-        
+
                                         if (contar == 10) {
-    
-    
+
+
                                             if (firstName.length()>=3) {
-    
+
                                                 if (lastName.length()>=3) {
-    
+
                                                     if (isNumber) {
                                                         try {
                                                             loginController.registrarUsuario(emailString, idInterno, username, password, phone, firstName, lastName);
                                                             showAlert(Alert.AlertType.INFORMATION, "Éxito", "Usuario registrado exitosamente.");
                                                             showRegisterUser(primaryStage, username, emailString, password, phone, firstName, lastName);
                                                             primaryStage.setScene(new Scene(createLoginForm(primaryStage)));
-                                                            primaryStage.setMaximized(true); 
+                                                            primaryStage.setMaximized(true);
                                                             primaryStage.show();
+                                                            System.out.println(phone);
+
                                                         } catch (Exception ex) {
                                                             showAlert(Alert.AlertType.ERROR, "Error", ex.getMessage());
                                                         }
@@ -445,43 +449,43 @@ public class View extends Application {
                                                         phoneInput.setStyle("-fx-background-color: lightcoral;");
                                                         messageError.setText("Numero de telefono invalido, ingrese solo numeros");
                                                     }
-    
-    
-                                                    
+
+
+
                                                 }else if (lastName.length()<3) {
                                                     lastNameInput.setStyle("-fx-background-color: lightcoral;");
                                                     messageError.setText("El apellido debe tener mas de 2 letras");
-                                                    
+
                                                 }
-                                                
+
                                             }else if (firstName.length()<3) {
                                                 firstNameInput.setStyle("-fx-background-color: lightcoral;");
                                                 messageError.setText("El nombre debe tener mas de 3 letras");
-                                                
+
                                             }
-    
-                                          
+
+
                                         } else if (contar < 10 || contar > 10) {
-                                           
+
                                             phoneInput.setStyle("-fx-background-color: lightcoral;");
                                             messageError.setText("El numero de telefono debe tener solo 10 caracteres");
                                         }
-        
-                                        
+
+
                                     }else if(passwordExist) {
                                         comfirmPassword.setStyle("-fx-background-color: lightcoral;");
                                         passwordInput.setStyle("-fx-background-color: lightcoral;");
                                         messageError.setText("Contraseña ya existentes");
-    
+
                                     }
-    
-                                   
-    
+
+
+
                                 } else if (isExist) {
                                     usernameInput.setStyle("-fx-background-color: lightcoral;");
                                     messageError.setText("Nombre de usuario ya existente");
                                 }
-                                
+
 
 
                             }else   {
@@ -490,7 +494,7 @@ public class View extends Application {
 
                             }
 
-                          
+
                         } else {
 
                             firstNameInput.setStyle("-fx-background-color: lightcoral;");
@@ -499,11 +503,12 @@ public class View extends Application {
                         }
 
                     } else {
-                       
+
                         comfirmPassword.setStyle("-fx-background-color: lightcoral;");
                         passwordInput.setStyle("-fx-background-color: lightcoral;");
                         messageError.setText("Las contraseñas no coinciden");
                     }
+
 
 
                 } catch (IOException e1) {
@@ -544,7 +549,7 @@ public class View extends Application {
     primaryStage.show();
     }
 
-    private void showRegisterUser(Stage primaryStage, String userName, String email, String password, String phone, String firstName, String LastName) {  
+    private void showRegisterUser(Stage primaryStage, String userName, String email, String password, String phone, String firstName, String LastName) {
 
         Stage userInfoStage = new Stage();
     userInfoStage.initModality(Modality.APPLICATION_MODAL);
@@ -985,7 +990,7 @@ backgroundImage.setFitWidth(300);
             } else if (newPassword.contains(" ")) {
                 newPasswordInput.setStyle("-fx-background-color: lightcoral;");
                 errorMessage.setText("⚠ La contraseña no puede contener espacios.");
-            } else if (!isValidPassword(newPassword)) {
+            } else if (!loginController.verificarContraseña(newPassword)) {
                 newPasswordInput.setStyle("-fx-background-color: lightcoral;");
                 errorMessage.setText("⚠ La contraseña no cumple con los requisitos.");
             } else {
@@ -1036,31 +1041,6 @@ backgroundImage.setFitWidth(300);
         }
         applyStyles(scene);
         primaryStage.setMaximized(true);
-    }
-    
-
-    private boolean isValidPassword(String password) {
-        // Verificar que la contraseña tenga al menos 8 caracteres
-        if (password.length() < 8) {
-            return false;
-        }
-        // Verificar que la contraseña tenga al menos una letra mayúscula
-        if (!password.matches(".*[A-Z].*")) {
-            return false;
-        }
-        // Verificar que la contraseña tenga al menos una letra minúscula
-        if (!password.matches(".*[a-z].*")) {
-            return false;
-        }
-        // Verificar que la contraseña tenga al menos dos números
-        if (!password.matches(".*[0-9].*[0-9].*")) {
-            return false;
-        }
-        // Verificar que la contraseña tenga al menos un carácter especial
-        if (!password.matches(".*[!@#$%^&*()].*")) {
-            return false;
-        }
-        return true;
     }
 
 
