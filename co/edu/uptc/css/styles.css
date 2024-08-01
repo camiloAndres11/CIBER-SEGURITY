@@ -3,7 +3,22 @@
     -fx-text-fill: white;
 }
 .button-recover{
-    -fx-background-color: white ;
+    -fx-background-color: #ffffff ;
     -fx-text-fill: black;
 }
-
+.button-return{
+    -fx-background-color: #4299d6 ;
+    -fx-text-fill: white;
+}
+.button-recover-1{
+    -fx-background-color: #4299d6 ;
+    -fx-text-fill: white;
+}
+.button-verify{
+    -fx-background-color: #4299d6 ;
+    -fx-text-fill: white;
+}
+.button-save{
+    -fx-background-color: #4299d6 ;
+    -fx-text-fill: white;
+}

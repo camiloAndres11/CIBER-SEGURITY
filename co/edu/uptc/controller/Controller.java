@@ -135,25 +135,36 @@ public class Controller {
         
     }
 
-    public void actualizarContraseña(String email, String nuevaContraseña) throws Exception {
+    public String getPasswordByEmail(String email) {
         for (Model model : cuentasEstudiantes) {
             if (model.getCorreoElectronico().equals(email)) {
-                // Verificar que la nueva contraseña no sea igual a la actual
-                if (model.getContraseña().equals(nuevaContraseña)) {
-                    throw new Exception("La nueva contraseña no puede ser igual a una anterior.");
-                }
-                
-                // Verificar que la nueva contraseña cumpla con los requisitos
-                if (!verificarContraseña(nuevaContraseña)) {
-                    throw new Exception("La nueva contraseña no cumple con los requisitos.");
-                }
-                
-                // Actualizar la contraseña
+                return model.getContraseña();
+            }
+        }
+        return null;
+    }
+
+    public void actualizarContraseña(String email, String nuevaContraseña) throws Exception {
+        String currentPassword = getPasswordByEmail(email);
+        if (currentPassword == null) {
+            throw new Exception("No se encontró una cuenta asociada al email proporcionado.");
+        }
+        
+        if (currentPassword.equals(nuevaContraseña)) {
+            throw new Exception("La nueva contraseña no puede ser igual a la actual.");
+        }
+        
+        if (!verificarContraseña(nuevaContraseña)) {
+            throw new Exception("La nueva contraseña no cumple con los requisitos.");
+        }
+        
+        for (Model model : cuentasEstudiantes) {
+            if (model.getCorreoElectronico().equals(email)) {
                 model.setContraseña(nuevaContraseña);
                 try {
                     JsonFile.writeToJson(cuentasEstudiantes, FILE_PATH);
                 } catch (IOException e) {
-                    System.out.println("Error al actualizar la contraseña: " + e.getMessage());
+                    throw new Exception("Error al actualizar la contraseña: " + e.getMessage());
                 }
                 break;
             }
