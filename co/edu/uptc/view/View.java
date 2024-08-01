@@ -771,7 +771,10 @@ public class View extends Application {
                     } else {
                         loginController.actualizarContraseña(email, newPassword);
                         showAlert(Alert.AlertType.INFORMATION, "Éxito", "Contraseña cambiada exitosamente.");
-                        primaryStage.setScene(new Scene(createLoginForm(primaryStage), 400, 300));
+                        Scene loginScene = new Scene(createLoginForm(primaryStage));
+                        applyStyles(loginScene);
+                        primaryStage.setScene(loginScene);
+                        primaryStage.setMaximized(true);
                     }
                 } catch (Exception e1) {
                     e1.printStackTrace();
