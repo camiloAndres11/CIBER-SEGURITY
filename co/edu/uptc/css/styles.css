@@ -4,10 +4,10 @@
 }
 .button-recover{
     -fx-background-color: #ffffff ;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 .button-return{
-    -fx-background-color: #4299d6 ;
+    -fx-background-color: gray ;
     -fx-text-fill: white;
 }
 .button-recover-1{
