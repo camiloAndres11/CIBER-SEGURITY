@@ -69,6 +69,10 @@ public class View extends Application {
     }
 
     private StackPane createLoginForm(Stage primaryStage) {
+
+        Image icon = new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg");
+        primaryStage.getIcons().add(icon);
+
         GridPane loginGrid = new GridPane();
         loginGrid.setPadding(new Insets(10));
         loginGrid.setHgap(10);
@@ -223,9 +227,6 @@ public class View extends Application {
     registerGrid.setHgap(10);
     registerGrid.setVgap(10);
 
-    Image icon = new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg");
-    primaryStage.getIcons().add(icon);
-
     Label usernameLabel = new Label("Nombre de usuario:");
     TextField usernameInput = new TextField();
     Label passwordLabel = new Label("Contraseña:");
@@ -267,7 +268,8 @@ public class View extends Application {
     firstNameInput.setStyle("-fx-background-color: lightgray;");
     lastNameInput.setStyle("-fx-background-color: lightgray;");
     comfirmPassword.setStyle("-fx-background-color: lightgray;");
-    registerButton.setStyle("-fx-background-color: #4299d6 ;");
+    registerButton.setStyle("-fx-background-color: #4299d6; -fx-text-fill: white;");
+    returnButton.setStyle("-fx-background-color: gray; -fx-text-fill: white;");  // Cambia el color del botón de volver a gris y el texto a negro
 
     ImageView imageView = new ImageView(new Image("co\\edu\\uptc\\util\\logo-uptc.png"));
     imageView.setFitHeight(80);
@@ -293,9 +295,9 @@ public class View extends Application {
     GridPane.setConstraints(firstNameInput, 1, 6);
     GridPane.setConstraints(lastNameLabel, 0, 7);
     GridPane.setConstraints(lastNameInput, 1, 7);
-    GridPane.setConstraints(returnButton, 0, 8);
-    GridPane.setConstraints(registerButton, 1, 8);
-    GridPane.setConstraints(messageError, 0, 9, 2, 1);
+    GridPane.setConstraints(returnButton, 0, 9);
+    GridPane.setConstraints(registerButton, 1, 9);
+    GridPane.setConstraints(messageError, 0, 8, 2, 1);
 
     GridPane.setHalignment(usernameLabel, HPos.CENTER);
     GridPane.setHalignment(passwordLabel, HPos.CENTER);
@@ -333,7 +335,6 @@ public class View extends Application {
         firstNameInput.setStyle("-fx-background-color: lightgray;");
         lastNameInput.setStyle("-fx-background-color: lightgray;");
         comfirmPassword.setStyle("-fx-background-color: lightgray;");
-        registerButton.setStyle("-fx-background-color: #4299d6 ;");
             messageError.setText("");
 
             String username = usernameInput.getText().trim();
@@ -653,7 +654,6 @@ backgroundImage.setFitWidth(300);
     userInfoStage.setScene(userInfoScene);
     userInfoStage.sizeToScene();
     userInfoStage.show();
-
 
     }
 
@@ -996,6 +996,7 @@ backgroundImage.setFitWidth(300);
                         errorMessage.setText("⚠ La nueva contraseña no puede ser igual a la anterior.");
                     } else {
                         loginController.actualizarContraseña(email, newPassword);
+                        
                         showAlert(Alert.AlertType.INFORMATION, "Éxito", "Contraseña cambiada exitosamente.");
                         Scene loginScene = new Scene(createLoginForm(primaryStage));
                         applyStyles(loginScene);
@@ -1068,55 +1069,57 @@ backgroundImage.setFitWidth(300);
     private void mostrarCodigoVerificacion(int verificationCode) {
         Stage codeStage = new Stage();
         codeStage.setTitle("Código de Verificación");
-
+    
+        // Añadir el icono personalizado a la ventana
+        codeStage.getIcons().add(new Image("co\\edu\\uptc\\util\\logo_uptc.jpeg"));
+    
         GridPane codeGrid = new GridPane();
         codeGrid.setPadding(new Insets(20));
         codeGrid.setHgap(10);
         codeGrid.setVgap(20);
         codeGrid.setAlignment(Pos.CENTER); // Center the grid
-
+    
         Label codeLabel = new Label("Tu código de verificación es:");
         codeLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         Label codeValue = new Label(String.valueOf(verificationCode));
         codeValue.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         Button closeButton = new Button("Cerrar");
         closeButton.setStyle("-fx-font-size: 14px;");
-
+    
         Label timerLabel = new Label("Tiempo restante: 60 segundos");
         timerLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-
+    
         GridPane.setHalignment(codeLabel, HPos.CENTER);
         GridPane.setHalignment(codeValue, HPos.CENTER);
         GridPane.setHalignment(timerLabel, HPos.CENTER);
         GridPane.setHalignment(closeButton, HPos.CENTER);
-
+    
         GridPane.setConstraints(codeLabel, 0, 0);
         GridPane.setConstraints(codeValue, 0, 1);
         GridPane.setConstraints(timerLabel, 0, 2);
         GridPane.setConstraints(closeButton, 0, 3);
-
+    
         closeButton.setOnAction(e -> codeStage.close());
-
+    
         codeGrid.getChildren().addAll(codeLabel, codeValue, timerLabel, closeButton);
-
+    
         Scene codeScene = new Scene(codeGrid, 400, 300);
         codeStage.setScene(codeScene);
         codeStage.show();
-
+    
         // Timeline for countdown
         final int[] secondsRemaining = {60};
         Timeline countdown = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             secondsRemaining[0]--;
             timerLabel.setText("Tiempo restante: " + secondsRemaining[0] + " segundos");
-
+    
             if (secondsRemaining[0] <= 0) {
                 codeStage.close();
             }
         }));
         countdown.setCycleCount(60); // Run for 60 seconds
         countdown.play();
-    }
-
+    }    
 
     private int generarCodigoVerificacion() {
         // Genera un código de verificación aleatorio de 6 dígitos
